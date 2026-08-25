@@ -1,0 +1,19 @@
+{
+  "name": "invitacion-felipe-sarita",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Invitaciones, confirmaciones RSVP y administracion de la boda de Felipe y Sarita.",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check admin/app.js"
+  },
+  "dependencies": {
+    "@babel/standalone": "7.29.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

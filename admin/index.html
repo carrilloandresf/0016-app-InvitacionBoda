@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Administración · Felipe &amp; Sarita</title>
+  <link rel="stylesheet" href="/admin/styles.css">
+  <script src="/admin/app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">Felipe &amp; Sarita · 07.11.2026</p>
+      <h1>Invitados y confirmaciones</h1>
+    </div>
+    <a class="button button-ghost" href="/" target="_blank" rel="noopener">Ver invitación</a>
+  </header>
+
+  <main>
+    <section class="summary" aria-label="Resumen">
+      <article><span>Invitaciones</span><strong id="stat-invitations">—</strong></article>
+      <article><span>Asistirán</span><strong id="stat-attending">—</strong></article>
+      <article><span>No asistirán</span><strong id="stat-declined">—</strong></article>
+      <article><span>Por confirmar</span><strong id="stat-pending">—</strong></article>
+      <article><span>Hospedaje</span><strong id="stat-lodging">—</strong></article>
+    </section>
+
+    <section class="menu-summary" aria-label="Resumen de menús">
+      <div><span>Murillo estofado</span><strong id="stat-p1">—</strong></div>
+      <div><span>Churrasco de pollo</span><strong id="stat-p2">—</strong></div>
+      <div><span>Menú infantil</span><strong id="stat-child-menu">—</strong></div>
+      <div><span>Con licor</span><strong id="stat-liquor-yes">—</strong></div>
+      <div><span>Sin licor</span><strong id="stat-liquor-no">—</strong></div>
+      <div><span>Soda frutos rojos</span><strong id="stat-b1">—</strong></div>
+      <div><span>Soda de lulo</span><strong id="stat-b2">—</strong></div>
+      <div><span>Porciones de torta</span><strong id="stat-cake">—</strong></div>
+    </section>
+
+    <section class="controls" aria-label="Acciones">
+      <label class="search">
+        <span class="sr-only">Buscar familia o invitado</span>
+        <input id="search" type="search" placeholder="Buscar familia o invitado…" autocomplete="off">
+      </label>
+      <div class="control-actions">
+        <button id="refresh" class="button button-ghost" type="button">Actualizar</button>
+        <a class="button button-ghost" href="/api/admin/export.csv" download>Exportar CSV</a>
+        <button id="new-invitation" class="button button-primary" type="button">Nueva invitación</button>
+      </div>
+    </section>
+
+    <div id="loading" class="state-card">Cargando invitaciones…</div>
+    <div id="empty" class="state-card" hidden>
+      <strong>Aún no hay invitaciones.</strong>
+      <span>Crea la primera para obtener un enlace personalizado.</span>
+    </div>
+    <section id="invitation-list" class="invitation-list" aria-live="polite"></section>
+  </main>
+
+  <dialog id="invitation-dialog">
+    <form id="invitation-form" method="dialog">
+      <header class="dialog-header">
+        <div>
+          <p class="eyebrow">Invitación personalizada</p>
+          <h2 id="dialog-title">Nueva invitación</h2>
+        </div>
+        <button class="icon-button" type="button" data-close aria-label="Cerrar">×</button>
+      </header>
+
+      <input id="invitation-id" type="hidden">
+      <label class="field">
+        <span>Nombre de familia o grupo</span>
+        <input id="family-name" name="familyName" maxlength="120" placeholder="Familia Pérez Gómez" required>
+      </label>
+
+      <fieldset>
+        <legend>Personas invitadas</legend>
+        <p class="field-help">La categoría define automáticamente el menú y el inventario de licor.</p>
+        <div id="guest-fields" class="guest-fields"></div>
+        <button id="add-guest" class="text-button" type="button">+ Agregar persona</button>
+      </fieldset>
+
+      <label class="check-field">
+        <input id="special-lodging" type="checkbox">
+        <span>Mostrar la opción especial de hospedaje</span>
+      </label>
+
+      <p id="form-error" class="form-error" role="alert" hidden></p>
+      <footer class="dialog-actions">
+        <button class="button button-ghost" type="button" data-close>Cancelar</button>
+        <button id="save-invitation" class="button button-primary" type="submit">Guardar invitación</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
