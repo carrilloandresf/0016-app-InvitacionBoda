@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <title>Administración · Felipe &amp; Sarita</title>
+  <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
   <link rel="stylesheet" href="/admin/styles.css">
   <script src="/admin/app.js" defer></script>
 </head>
@@ -32,9 +33,31 @@
       <div><span>Menú infantil</span><strong id="stat-child-menu">—</strong></div>
       <div><span>Con licor</span><strong id="stat-liquor-yes">—</strong></div>
       <div><span>Sin licor</span><strong id="stat-liquor-no">—</strong></div>
-      <div><span>Soda frutos rojos</span><strong id="stat-b1">—</strong></div>
-      <div><span>Soda de lulo</span><strong id="stat-b2">—</strong></div>
+      <div><span>Soda tamarindo y limonaria</span><strong id="stat-b1">—</strong></div>
+      <div><span>Soda arándanos y moras</span><strong id="stat-b2">—</strong></div>
       <div><span>Porciones de torta</span><strong id="stat-cake">—</strong></div>
+    </section>
+
+    <section class="settings-panel" aria-label="Configuración de la invitación">
+      <h2>Configuración</h2>
+      <div class="settings-grid">
+        <div class="setting-item">
+          <span class="setting-label">Ubicación de la recepción</span>
+          <div class="segmented" id="reception-visibility" role="radiogroup" aria-label="Visibilidad de la ubicación de la recepción">
+            <button type="button" class="segmented-option" data-value="auto">Automático</button>
+            <button type="button" class="segmented-option" data-value="show">Forzar visible</button>
+            <button type="button" class="segmented-option" data-value="hide">Forzar oculta</button>
+          </div>
+          <p class="setting-help">Automático revela la ubicación después de la ceremonia. También puedes forzarla visible u oculta en cualquier momento.</p>
+        </div>
+        <div class="setting-item">
+          <label class="check-field" style="margin-top:0">
+            <input id="rsvp-lock" type="checkbox">
+            <span>Bloquear confirmaciones y modificaciones de asistencia después del 11 de octubre de 2026</span>
+          </label>
+          <p class="setting-help">Con esta opción activa, nadie podrá confirmar ni cambiar su respuesta luego de la fecha límite.</p>
+        </div>
+      </div>
     </section>
 
     <section class="controls" aria-label="Acciones">

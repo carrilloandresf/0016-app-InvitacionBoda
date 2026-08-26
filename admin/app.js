@@ -1,7 +1,8 @@
 const state = {
   invitations: [],
   summary: null,
-  filter: ''
+  filter: '',
+  settings: { receptionVisibility: 'auto', rsvpLockEnabled: true }
 };
 
 const elements = {
@@ -18,12 +19,14 @@ const elements = {
   guestFields: document.querySelector('#guest-fields'),
   dialogTitle: document.querySelector('#dialog-title'),
   saveButton: document.querySelector('#save-invitation'),
-  toast: document.querySelector('#toast')
+  toast: document.querySelector('#toast'),
+  receptionVisibility: document.querySelector('#reception-visibility'),
+  rsvpLock: document.querySelector('#rsvp-lock')
 };
 
 const labels = {
   meals: { p1: 'Murillo estofado', p2: 'Churrasco de pollo' },
-  drinks: { b1: 'Soda de frutos rojos', b2: 'Soda de lulo' },
+  drinks: { b1: 'Soda de tamarindo y limonaria', b2: 'Soda de arándanos y moras' },
   guestTypes: { adult: 'Adulto', youth: 'Joven', child: 'Niño' }
 };
 
@@ -65,6 +68,41 @@ function renderSummary() {
   setStat('#stat-b1', summary.drinks?.b1);
   setStat('#stat-b2', summary.drinks?.b2);
   setStat('#stat-cake', summary.cake);
+}
+
+function renderSettings() {
+  const { receptionVisibility, rsvpLockEnabled } = state.settings;
+  elements.receptionVisibility.querySelectorAll('.segmented-option').forEach((button) => {
+    button.classList.toggle('active', button.dataset.value === receptionVisibility);
+  });
+  elements.rsvpLock.checked = rsvpLockEnabled;
+}
+
+async function loadSettings() {
+  try {
+    state.settings = await request('/api/admin/settings');
+    renderSettings();
+  } catch (error) {
+    showToast(error.message);
+  }
+}
+
+async function updateSettings(patch) {
+  const previous = state.settings;
+  state.settings = { ...state.settings, ...patch };
+  renderSettings();
+  try {
+    state.settings = await request('/api/admin/settings', {
+      method: 'PUT',
+      body: JSON.stringify(patch)
+    });
+    renderSettings();
+    showToast('Configuración actualizada.');
+  } catch (error) {
+    state.settings = previous;
+    renderSettings();
+    showToast(error.message);
+  }
 }
 
 function invitationUrl(invitation) {
@@ -325,6 +363,15 @@ elements.list.addEventListener('click', async (event) => {
   }
 });
 
+elements.receptionVisibility.addEventListener('click', (event) => {
+  const button = event.target.closest('.segmented-option');
+  if (!button || button.classList.contains('active')) return;
+  updateSettings({ receptionVisibility: button.dataset.value });
+});
+elements.rsvpLock.addEventListener('change', () => {
+  updateSettings({ rsvpLockEnabled: elements.rsvpLock.checked });
+});
+
 document.querySelector('#new-invitation').addEventListener('click', () => openForm());
 document.querySelector('#refresh').addEventListener('click', load);
 document.querySelector('#add-guest').addEventListener('click', () => addGuestField());
@@ -339,3 +386,4 @@ elements.dialog.addEventListener('click', (event) => {
 });
 
 load();
+loadSettings();

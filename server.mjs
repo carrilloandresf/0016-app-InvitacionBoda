@@ -57,6 +57,11 @@ db.exec(`
   );
 
   CREATE INDEX IF NOT EXISTS guests_invitation_id_idx ON guests(invitation_id);
+
+  CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
+  );
 `);
 
 // Migración no destructiva para bases creadas antes de clasificar invitados.
@@ -68,6 +73,36 @@ if (!guestColumns.some((column) => column.name === 'guest_type')) {
     ADD COLUMN guest_type TEXT NOT NULL DEFAULT 'adult'
     CHECK (guest_type IN ('adult', 'youth', 'child'))
   `);
+}
+
+// Fin del plazo de confirmación/modificación de asistencia: 11 de octubre de 2026, 23:59 hora de Colombia (UTC-5).
+const RSVP_DEADLINE = Date.UTC(2026, 9, 12, 4, 59, 59);
+const RECEPTION_VISIBILITY_VALUES = new Set(['auto', 'show', 'hide']);
+
+function getSetting(key) {
+  const row = db.prepare('SELECT value FROM settings WHERE key = ?').get(key);
+  return row ? row.value : null;
+}
+
+function setSetting(key, value) {
+  db.prepare(`
+    INSERT INTO settings (key, value) VALUES (?, ?)
+    ON CONFLICT(key) DO UPDATE SET value = excluded.value
+  `).run(key, value);
+}
+
+function currentSettings() {
+  const receptionVisibility = getSetting('reception_visibility');
+  const rsvpLockEnabled = getSetting('rsvp_lock_enabled');
+  return {
+    receptionVisibility: RECEPTION_VISIBILITY_VALUES.has(receptionVisibility) ? receptionVisibility : 'auto',
+    rsvpLockEnabled: rsvpLockEnabled === null ? true : rsvpLockEnabled === '1'
+  };
+}
+
+function rsvpLockActive() {
+  const settings = currentSettings();
+  return settings.rsvpLockEnabled && Date.now() > RSVP_DEADLINE;
 }
 
 const MIME_TYPES = {
@@ -92,6 +127,7 @@ const STATIC_FILES = new Map([
   ['/img/novios-anillo.jpeg', join(ROOT, 'img/novios-anillo.jpeg')],
   ['/img/novios-villa-de-leyva.jpeg', join(ROOT, 'img/novios-villa-de-leyva.jpeg')],
   ['/img/ramita-olivo.png', join(ROOT, 'img/ramita-olivo.png')],
+  ['/img/favicon.svg', join(ROOT, 'img/favicon.svg')],
   ['/img/dress-code/hombre-01-beige-chaleco.jpeg', join(ROOT, 'img/dress-code/hombre-01-beige-chaleco.jpeg')],
   ['/img/dress-code/hombre-02-beige-tirantes.jpeg', join(ROOT, 'img/dress-code/hombre-02-beige-tirantes.jpeg')],
   ['/img/dress-code/hombre-03-tonos-tierra.jpeg', join(ROOT, 'img/dress-code/hombre-03-tonos-tierra.jpeg')],
@@ -425,6 +461,11 @@ function updateInvitation(id, body) {
 function saveRsvp(token, body) {
   const invitation = db.prepare('SELECT id FROM invitations WHERE token = ?').get(token);
   if (!invitation) return null;
+  if (rsvpLockActive()) {
+    const error = new Error('El plazo para confirmar o modificar tu asistencia venció el 11 de octubre de 2026.');
+    error.status = 403;
+    throw error;
+  }
   if (!Array.isArray(body.guests)) throw validationError('La lista de respuestas es obligatoria.');
 
   const existingGuests = guestRows(invitation.id);
@@ -484,7 +525,7 @@ function invitationsCsv(invitations) {
     'Hospedaje', 'Respondido el', 'Enlace'
   ]];
   const mealLabels = { p1: 'Murillo Estofado', p2: 'Churrasco de Pollo' };
-  const drinkLabels = { b1: 'Soda de frutos rojos', b2: 'Soda de lulo' };
+  const drinkLabels = { b1: 'Soda de tamarindo y limonaria', b2: 'Soda de arándanos y moras' };
   const typeLabels = { adult: 'Adulto', youth: 'Joven', child: 'Niño' };
   for (const invitation of invitations) {
     for (const guest of invitation.guests) {
@@ -512,6 +553,10 @@ function parseId(pathname) {
 }
 
 async function handleApi(req, res, url) {
+  if (url.pathname === '/api/settings' && req.method === 'GET') {
+    return sendJson(res, 200, currentSettings());
+  }
+
   const publicMatch = url.pathname.match(/^\/api\/invitations\/([A-Za-z0-9_-]+)(?:\/(rsvp|lodging))?$/);
   if (publicMatch) {
     const [, token, action] = publicMatch;
@@ -558,6 +603,25 @@ async function handleApi(req, res, url) {
     if (Number(result.changes) === 0) return sendJson(res, 404, { error: 'La invitación no existe.' });
     res.writeHead(204, securityHeaders({ 'Cache-Control': 'no-store' }));
     return res.end();
+  }
+  if (url.pathname === '/api/admin/settings' && req.method === 'GET') {
+    return sendJson(res, 200, currentSettings());
+  }
+  if (url.pathname === '/api/admin/settings' && req.method === 'PUT') {
+    const body = await readJson(req);
+    if (body.receptionVisibility !== undefined) {
+      if (!RECEPTION_VISIBILITY_VALUES.has(body.receptionVisibility)) {
+        throw validationError('La visibilidad de la recepción no es válida.');
+      }
+      setSetting('reception_visibility', body.receptionVisibility);
+    }
+    if (body.rsvpLockEnabled !== undefined) {
+      if (typeof body.rsvpLockEnabled !== 'boolean') {
+        throw validationError('El bloqueo de asistencia debe ser verdadero o falso.');
+      }
+      setSetting('rsvp_lock_enabled', body.rsvpLockEnabled ? '1' : '0');
+    }
+    return sendJson(res, 200, currentSettings());
   }
   if (url.pathname === '/api/admin/export.csv' && req.method === 'GET') {
     const csv = invitationsCsv(adminInvitations());

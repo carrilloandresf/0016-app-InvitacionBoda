@@ -13,6 +13,8 @@
 <meta property="og:title" content="Felipe &amp; Sarita">
 <meta property="og:description" content="07 · 11 · 2026 — Villa de Leyva">
 <meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+<link rel="shortcut icon" type="image/svg+xml" href="/img/favicon.svg">
 <link rel="stylesheet" href="_ds/classical-717d4eba-58bb-40a1-8c6e-55130b3c446a/styles.css">
 <script src="_ds/classical-717d4eba-58bb-40a1-8c6e-55130b3c446a/_ds_bundle.js"></script>
 <script src="./image-slot.js"></script>
@@ -509,8 +511,8 @@
                     </sc-if>
                     <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent-700);margin:20px 0 12px">Bebida</div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                      <button onClick="{{g.b1}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b1-bg, transparent);color:var(--b1-fg, var(--color-text));border:1px solid var(--b1-bd, var(--color-divider))">Soda de frutos rojos</button>
-                      <button onClick="{{g.b2}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b2-bg, transparent);color:var(--b2-fg, var(--color-text));border:1px solid var(--b2-bd, var(--color-divider))">Soda de lulo</button>
+                      <button onClick="{{g.b1}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b1-bg, transparent);color:var(--b1-fg, var(--color-text));border:1px solid var(--b1-bd, var(--color-divider))">Soda de tamarindo y limonaria</button>
+                      <button onClick="{{g.b2}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b2-bg, transparent);color:var(--b2-fg, var(--color-text));border:1px solid var(--b2-bd, var(--color-divider))">Soda de arándanos y moras</button>
                     </div>
                     <button onClick="{{g.cake}}" style="width:100%;margin-top:12px;min-height:46px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;transition:background 320ms ease,border-color 320ms ease;background:var(--t-bg, transparent);border:1px solid var(--t-bd, var(--color-divider))">
                       <span style="font-family:var(--font-heading);font-size:16px;color:var(--t-fg, var(--color-text))">Porción de torta</span>
@@ -529,6 +531,13 @@
         </div>
       </sc-if>
 
+      <sc-if value="{{showRsvpLocked}}" hint-placeholder-val="{{ false }}">
+        <div class="card" style="padding:clamp(24px,3vw,34px);text-align:center;animation:fsIn 500ms ease both">
+          <div style="font-family:var(--font-heading);font-size:clamp(22px,2.8vw,28px);margin-bottom:10px">El plazo de confirmación venció</div>
+          <p style="font-size:14px;line-height:1.7;color:var(--color-neutral-700);margin:0">El 11 de octubre de 2026 se cerró la confirmación de asistencia. Si tienes alguna duda, escríbenos directamente.</p>
+        </div>
+      </sc-if>
+
       <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
         <div class="card" style="padding:clamp(28px,3.4vw,38px);text-align:center;animation:fsIn 700ms cubic-bezier(.22,.7,.25,1) both">
           <div style="font-family:var(--font-heading);font-size:clamp(26px,3vw,32px);margin-bottom:10px">¡Gracias!</div>
@@ -541,7 +550,12 @@
               </div>
             </sc-for>
           </div>
-          <button class="btn btn-secondary" onClick="{{edit}}" style="min-height:44px">Modificar mi respuesta</button>
+          <sc-if value="{{canEdit}}" hint-placeholder-val="{{ true }}">
+            <button class="btn btn-secondary" onClick="{{edit}}" style="min-height:44px">Modificar mi respuesta</button>
+          </sc-if>
+          <sc-if value="{{editLocked}}" hint-placeholder-val="{{ false }}">
+            <p style="font-size:13px;color:var(--color-neutral-700);margin:0">El plazo para modificar tu respuesta venció el 11 de octubre de 2026.</p>
+          </sc-if>
         </div>
       </sc-if>
     </div>
@@ -586,7 +600,6 @@
         </div>
         <p style="font-size:12px;font-style:italic;color:var(--color-neutral-700);margin:8px 0 20px">Tarifas sujetas a disponibilidad.</p>
         <button class="btn btn-primary btn-block" onClick="{{lodging}}" style="min-height:52px;letter-spacing:.12em;text-transform:uppercase;border-radius:26px 26px 4px 4px;transition:background 300ms ease">{{lodgingLabel}}</button>
-        <p style="font-size:12px;text-align:center;color:var(--color-neutral-700);margin:12px 0 0">[CONTACTO HOSPEDAJE]</p>
       </div>
     </sc-if>
 
@@ -612,11 +625,11 @@
         <h2 style="font-size:clamp(32px,4.4vw,46px);font-weight:400;margin:0 0 22px;color:var(--color-neutral-100)">La celebración continúa</h2>
         <div style="animation:fsSeal 900ms 300ms cubic-bezier(.22,.7,.25,1) both">
           <div style="font-family:var(--font-heading);font-size:clamp(30px,4vw,42px);color:var(--color-accent-300);margin-bottom:8px">{{receptionName}}</div>
-          <div style="font-size:14px;color:var(--color-neutral-300);margin-bottom:26px">[DIRECCIÓN EXACTA CONFIRMADA]</div>
+          <div style="font-size:14px;color:var(--color-neutral-300);margin-bottom:26px">Km 0, vía Sáchica — Villa de Leyva</div>
         </div>
         <div style="display:grid;gap:10px;max-width:300px;margin:0 auto">
-          <a class="btn btn-block" href="#" style="min-height:50px;border:1px solid var(--color-accent-400);color:var(--color-accent-300);border-radius:25px 25px 4px 4px;letter-spacing:.12em;text-transform:uppercase">Google Maps</a>
-          <a class="btn btn-block" href="#" style="min-height:50px;border:1px solid color-mix(in srgb, var(--color-neutral-200) 40%, transparent);color:var(--color-neutral-200);border-radius:25px 25px 4px 4px;letter-spacing:.12em;text-transform:uppercase">Waze</a>
+          <a class="btn btn-block" href="https://www.google.com/maps/search/?api=1&amp;query=Pietra+Hotel+Km+0+V%C3%ADa+S%C3%A1chica+-+Villa+de+Leyva" target="_blank" rel="noopener" style="min-height:50px;border:1px solid var(--color-accent-400);color:var(--color-accent-300);border-radius:25px 25px 4px 4px;letter-spacing:.12em;text-transform:uppercase">Google Maps</a>
+          <a class="btn btn-block" href="https://www.waze.com/ul?q=Pietra%20Hotel%2C%20Km%200%20V%C3%ADa%20S%C3%A1chica%20-%20Villa%20de%20Leyva&amp;navigate=yes" target="_blank" rel="noopener" style="min-height:50px;border:1px solid color-mix(in srgb, var(--color-neutral-200) 40%, transparent);color:var(--color-neutral-200);border-radius:25px 25px 4px 4px;letter-spacing:.12em;text-transform:uppercase">Waze</a>
         </div>
         <p style="font-size:13px;color:var(--color-neutral-400);margin:22px 0 0">El traslado será por cuenta de cada invitado.</p>
       </div>
@@ -672,29 +685,15 @@
   <section data-screen-label="Regalos" style="padding:clamp(52px,7vw,92px) clamp(24px,5vw,64px);background:var(--color-neutral-100);border-top:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider);text-align:center">
     <div style="max-width:520px;margin:0 auto">
       <h2 data-reveal="rise" style="font-size:clamp(28px,3.8vw,40px);font-weight:400;margin:0 0 16px;line-height:1.25">Su presencia es nuestro mejor regalo</h2>
-      <p data-reveal="rise" style="font-size:clamp(15px,1.7vw,18px);line-height:1.8;color:var(--color-neutral-800);margin:0 auto 6px;max-width:34ch">Pero si desean tener un detalle con nosotros, tendremos lluvia de sobres.</p>
-      <p data-reveal="rise" style="font-size:clamp(15px,1.7vw,18px);line-height:1.8;color:var(--color-neutral-800);margin:0 auto 24px;max-width:34ch">También podrán hacerlo de forma digital.</p>
-      <button data-reveal="rise" onClick="{{openQr}}" style="border:none;background:transparent;padding:0;cursor:pointer">
-        <div style="width:min(60vw,210px);aspect-ratio:768/1369;border:6px solid var(--color-surface);outline:1px solid var(--color-divider);margin:0 auto;overflow:hidden;background:var(--color-surface)">
-          <img src="/img/QRCodePagos.jpeg" alt="Código QR y llave para transferencia" style="display:block;width:100%;height:100%;object-fit:contain">
-        </div>
-        <div style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-700);margin-top:12px">Toca para ampliar</div>
-      </button>
-    </div>
-  </section>
-
-  <section data-screen-label="Información útil" style="padding:clamp(52px,7vw,92px) clamp(24px,5vw,64px)">
-    <div data-reveal="rise" style="text-align:center;margin-bottom:clamp(22px,3vw,32px)">
-      <div style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-700)">Información útil</div>
-    </div>
-    <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));max-width:820px;margin:0 auto">
-      <div data-reveal="rise" class="card" style="padding:clamp(20px,2.4vw,26px)">
-        <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);margin-bottom:6px">Transporte</div>
-        <p style="font-size:14px;line-height:1.7;color:var(--color-neutral-800);margin:0">El desplazamiento entre los diferentes lugares será por cuenta de cada invitado.</p>
-      </div>
-      <div data-reveal="rise" class="card" style="padding:clamp(20px,2.4vw,26px)">
-        <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);margin-bottom:6px">Niños</div>
-        <p style="font-size:14px;line-height:1.7;color:var(--color-neutral-800);margin:0">Los pequeños invitados incluidos en cada invitación también son bienvenidos.</p>
+      <p data-reveal="rise" style="font-size:clamp(15px,1.7vw,18px);line-height:1.8;color:var(--color-neutral-800);margin:0 auto;max-width:36ch">Lo que más nos ilusiona es compartir este día contigo. Si además deseas tener un detalle con nosotros, tendremos lluvia de sobres durante la celebración.</p>
+      <div style="margin:clamp(30px,4vw,42px) auto 0;padding-top:clamp(22px,3vw,30px);border-top:1px solid var(--color-divider);max-width:280px">
+        <p data-reveal="rise" style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700);margin:0 0 14px">¿Prefieres una opción digital?</p>
+        <button data-reveal="rise" onClick="{{openQr}}" style="border:none;background:transparent;padding:0;cursor:pointer">
+          <div style="width:min(38vw,130px);aspect-ratio:768/1369;border:5px solid var(--color-surface);outline:1px solid var(--color-divider);margin:0 auto;overflow:hidden;background:var(--color-surface)">
+            <img src="/img/QRCodePagos.jpeg" alt="Código QR y llave para transferencia" style="display:block;width:100%;height:100%;object-fit:contain">
+          </div>
+          <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:10px">Ver datos</div>
+        </button>
       </div>
     </div>
   </section>
@@ -767,6 +766,8 @@
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:932},&quot;familyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Familia Roman Rodriguez&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;guestNames&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Flor Esperanza Rodriguez, Rogger Roman Augusto&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;specialLodging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;receptionRevealed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Recepción&quot;},&quot;receptionName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Pietra Hotel&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Recepción&quot;}}">
 const CEREMONY = Date.UTC(2026, 10, 7, 19, 0, 0);
 const REVEAL_AT = Date.UTC(2026, 10, 7, 20, 0, 0);
+// Fin del plazo de confirmación/modificación de asistencia: 11 de octubre de 2026, 23:59 hora de Colombia (UTC-5).
+const RSVP_DEADLINE = Date.UTC(2026, 9, 12, 4, 59, 59);
 
 class Component extends DCLogic {
   state = {
@@ -784,14 +785,24 @@ class Component extends DCLogic {
     loadingInvitation: true,
     loadError: '',
     submitError: '',
-    saving: false
+    saving: false,
+    settings: { receptionVisibility: 'auto', rsvpLockEnabled: true }
   };
 
   componentDidMount() {
     this.timer = setInterval(() => this.setState({ now: Date.now() }), 1000);
     this.loadInvitation();
+    this.loadSettings();
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.initReveals();
   }
+
+  loadSettings = async () => {
+    try {
+      const response = await fetch('/api/settings');
+      const data = await response.json().catch(() => ({}));
+      if (response.ok) this.setState({ settings: data });
+    } catch (error) {}
+  };
 
   loadInvitation = async () => {
     const token = new URLSearchParams(window.location.search).get('i');
@@ -969,7 +980,7 @@ class Component extends DCLogic {
     const yesVars = { '--yes-bg': 'var(--color-accent-100)', '--yes-bd': 'var(--color-accent)', '--yes-fg': 'var(--color-accent-700)' };
     const noVars = { '--no-bg': 'var(--color-neutral-200)', '--no-bd': 'var(--color-neutral-500)', '--no-fg': 'var(--color-neutral-800)' };
     const PLATOS = { p1: 'Murillo Estofado', p2: 'Churrasco de Pollo' };
-    const BEBIDAS = { b1: 'Soda de frutos rojos', b2: 'Soda de lulo' };
+    const BEBIDAS = { b1: 'Soda de tamarindo y limonaria', b2: 'Soda de arándanos y moras' };
     const on = (k) => {
       const v = {};
       v['--' + k + '-bg'] = 'var(--color-accent-100)';
@@ -1024,7 +1035,10 @@ class Component extends DCLogic {
     });
 
     const diff = Math.max(0, CEREMONY - this.state.now);
-    const revealed = (this.props.receptionRevealed ?? false) || this.state.now >= REVEAL_AT;
+    const receptionVisibility = this.state.settings.receptionVisibility;
+    const autoRevealed = (this.props.receptionRevealed ?? false) || this.state.now >= REVEAL_AT;
+    const revealed = receptionVisibility === 'show' ? true : receptionVisibility === 'hide' ? false : autoRevealed;
+    const rsvpLocked = this.state.settings.rsvpLockEnabled && this.state.now > RSVP_DEADLINE;
 
     return {
       coverDisplay: st >= 5 ? 'none' : 'block',
@@ -1048,13 +1062,17 @@ class Component extends DCLogic {
       loadingInvitation: this.state.loadingInvitation,
       showLoadError: !this.state.loadingInvitation && !!this.state.loadError,
       loadError: this.state.loadError,
-      showForm: !this.state.loadingInvitation && !this.state.loadError && !this.state.sent,
+      showForm: !this.state.loadingInvitation && !this.state.loadError && !this.state.sent && !rsvpLocked,
+      showRsvpLocked: !this.state.loadingInvitation && !this.state.loadError && !this.state.sent && rsvpLocked,
       sent: this.state.sent,
       submitError: this.state.submitError,
       sendDisabled: !answered || this.state.saving,
       sendLabel: this.state.saving ? 'Guardando…' : 'Enviar confirmación',
       send: () => this.sendRsvp(guests),
+      canEdit: !rsvpLocked,
+      editLocked: rsvpLocked,
       edit: () => {
+        if (rsvpLocked) return;
         this.persist(this.state.rsvp, false);
         this.setState({ sent: false, submitError: '' }, () => {
           setTimeout(() => this.scrollToEl(document.getElementById('rsvp'), 12), 120);
