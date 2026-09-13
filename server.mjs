@@ -12,6 +12,7 @@ const DATA_DIR = process.env.DATA_DIR || join(ROOT, 'data');
 const ADMIN_USER = process.env.ADMIN_USER || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
 const PUBLIC_URL = new URL(process.env.PUBLIC_URL || 'https://fys.nuestraboda.111labs.net').origin;
+const SHARE_VERSION = '2';
 const MAX_BODY_BYTES = 64 * 1024;
 
 if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
@@ -205,7 +206,7 @@ function serveInvitation(res, url) {
     : 'Felipe & Sarita · Invitación de boda';
   const description = 'Celebremos juntos el 7 de noviembre de 2026 en Villa de Leyva. Abre la invitación para conocer todos los detalles.';
   const canonicalUrl = invitation
-    ? `${PUBLIC_URL}/?i=${encodeURIComponent(token)}`
+    ? `${PUBLIC_URL}/?i=${encodeURIComponent(token)}&v=${SHARE_VERSION}`
     : `${PUBLIC_URL}/`;
   const previewUrl = `${PUBLIC_URL}/img/preview-whatsapp.jpg?v=20260912`;
   const socialMeta = `
@@ -589,7 +590,7 @@ function invitationsCsv(invitations) {
         guest.cake === true ? 'Sí' : guest.cake === false ? 'No' : '',
         invitation.lodgingInterest ? 'Sí' : 'No',
         invitation.respondedAt || '',
-        `/?i=${invitation.token}`
+        `/?i=${invitation.token}&v=${SHARE_VERSION}`
       ]);
     }
   }

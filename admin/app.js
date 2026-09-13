@@ -108,6 +108,7 @@ async function updateSettings(patch) {
 function invitationUrl(invitation) {
   const url = new URL('/', window.location.origin);
   url.searchParams.set('i', invitation.token);
+  url.searchParams.set('v', '2');
   return url.toString();
 }
 
