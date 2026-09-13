@@ -64,6 +64,7 @@ El panel muestra estos totales, conserva la categoría de cada persona y la incl
 | `APP_PORT` | Puerto publicado por Docker | `3016` |
 | `ADMIN_USER` | Usuario del panel | `admin` |
 | `ADMIN_PASSWORD` | Clave del panel, mínimo 12 caracteres | Obligatoria |
+| `PUBLIC_URL` | URL pública usada en las previsualizaciones al compartir | `https://fys.nuestraboda.111labs.net` |
 
 La información se guarda en el volumen `wedding-data`, montado en `/app/data` dentro del contenedor.
 

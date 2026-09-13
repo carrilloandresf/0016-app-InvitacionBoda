@@ -11,6 +11,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 const DATA_DIR = process.env.DATA_DIR || join(ROOT, 'data');
 const ADMIN_USER = process.env.ADMIN_USER || 'admin';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
+const PUBLIC_URL = new URL(process.env.PUBLIC_URL || 'https://fys.nuestraboda.111labs.net').origin;
 const MAX_BODY_BYTES = 64 * 1024;
 
 if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
@@ -119,13 +120,13 @@ const MIME_TYPES = {
 };
 
 const STATIC_FILES = new Map([
-  ['/', join(ROOT, 'Invitación Felipe y Sarita.dc.html')],
   ['/support.js', join(ROOT, 'support.js')],
   ['/image-slot.js', join(ROOT, 'image-slot.js')],
   ['/img/SiluetaVirgen.jpeg', join(ROOT, 'img/SiluetaVirgen.jpeg')],
   ['/img/QRCodePagos.jpeg', join(ROOT, 'img/QRCodePagos.jpeg')],
   ['/img/novios-anillo.jpeg', join(ROOT, 'img/novios-anillo.jpeg')],
   ['/img/novios-retrato.jpeg', join(ROOT, 'img/novios-retrato.jpeg')],
+  ['/img/preview-whatsapp.jpg', join(ROOT, 'img/preview-whatsapp.jpg')],
   ['/img/novios-villa-de-leyva.jpeg', join(ROOT, 'img/novios-villa-de-leyva.jpeg')],
   ['/img/ramita-olivo.png', join(ROOT, 'img/ramita-olivo.png')],
   ['/img/favicon.svg', join(ROOT, 'img/favicon.svg')],
@@ -153,6 +154,7 @@ const ADMIN_FILES = new Map([
   ['/admin/app.js', join(ROOT, 'admin/app.js')],
   ['/admin/styles.css', join(ROOT, 'admin/styles.css')]
 ]);
+const INVITATION_TEMPLATE = readFileSync(join(ROOT, 'Invitación Felipe y Sarita.dc.html'), 'utf8');
 
 function securityHeaders(extra = {}) {
   return {
@@ -182,6 +184,52 @@ function sendText(res, status, body, contentType = 'text/plain; charset=utf-8', 
     ...headers
   }));
   res.end(body);
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+function serveInvitation(res, url) {
+  const token = url.searchParams.get('i');
+  const invitation = token
+    ? db.prepare('SELECT family_name AS familyName FROM invitations WHERE token = ?').get(token)
+    : null;
+  const title = invitation
+    ? `Felipe & Sarita invitan a ${invitation.familyName}`
+    : 'Felipe & Sarita · Invitación de boda';
+  const description = 'Celebremos juntos el 7 de noviembre de 2026 en Villa de Leyva. Abre la invitación para conocer todos los detalles.';
+  const canonicalUrl = invitation
+    ? `${PUBLIC_URL}/?i=${encodeURIComponent(token)}`
+    : `${PUBLIC_URL}/`;
+  const previewUrl = `${PUBLIC_URL}/img/preview-whatsapp.jpg?v=20260912`;
+  const socialMeta = `
+<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeHtml(description)}">
+<link rel="canonical" href="${escapeHtml(canonicalUrl)}">
+<meta property="og:locale" content="es_CO">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Felipe &amp; Sarita">
+<meta property="og:title" content="${escapeHtml(title)}">
+<meta property="og:description" content="${escapeHtml(description)}">
+<meta property="og:url" content="${escapeHtml(canonicalUrl)}">
+<meta property="og:image" content="${escapeHtml(previewUrl)}">
+<meta property="og:image:secure_url" content="${escapeHtml(previewUrl)}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:image:alt" content="Invitación de boda de Felipe y Sarita">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escapeHtml(title)}">
+<meta name="twitter:description" content="${escapeHtml(description)}">
+<meta name="twitter:image" content="${escapeHtml(previewUrl)}">`;
+  const body = INVITATION_TEMPLATE.replace('<meta charset="utf-8">', `<meta charset="utf-8">${socialMeta}`);
+  sendText(res, 200, body, 'text/html; charset=utf-8', { 'Cache-Control': 'no-cache' });
 }
 
 function serveFile(res, filePath, { privateFile = false } = {}) {
@@ -639,6 +687,7 @@ const server = createServer(async (req, res) => {
   try {
     if (url.pathname === '/health') return sendJson(res, 200, { status: 'ok' });
     if (url.pathname.startsWith('/api/')) return await handleApi(req, res, url);
+    if (url.pathname === '/') return serveInvitation(res, url);
 
     if (ADMIN_FILES.has(url.pathname)) {
       if (!requireAdmin(req, res)) return;

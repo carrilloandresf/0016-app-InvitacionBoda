@@ -8,6 +8,7 @@ services:
     environment:
       ADMIN_USER: "${ADMIN_USER:-admin}"
       ADMIN_PASSWORD: "${ADMIN_PASSWORD:?Define ADMIN_PASSWORD en el archivo .env}"
+      PUBLIC_URL: "${PUBLIC_URL:-https://fys.nuestraboda.111labs.net}"
     healthcheck:
       test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 30s
