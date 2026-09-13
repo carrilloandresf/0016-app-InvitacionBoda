@@ -16,6 +16,7 @@ COPY --chown=node:node ["server.mjs", "support.js", "image-slot.js", "Invitació
 COPY --chown=node:node _ds ./_ds
 COPY --chown=node:node admin ./admin
 COPY --chown=node:node img ./img
+COPY --chown=node:node sounds ./sounds
 
 RUN mkdir -p /app/data && chown node:node /app/data
 

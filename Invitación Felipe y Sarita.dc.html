@@ -718,6 +718,8 @@
     </div>
   </div>
 
+  <audio id="fs-paper-sound" preload="auto" src="/sounds/paper-open.mp3" style="display:none"></audio>
+  <audio id="fs-bg-song" preload="auto" src="/sounds/ambient-song.mp3" style="display:none"></audio>
   <button onClick="{{toggleAudio}}" aria-label="{{audioAriaLabel}}" title="{{audioAriaLabel}}" style="display:flex;position:fixed;right:18px;bottom:18px;z-index:70;width:42px;height:42px;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--color-divider);background:var(--color-surface);box-shadow:0 8px 20px rgba(32,31,29,.18);cursor:pointer;font-size:17px;line-height:1;transition:opacity 320ms ease,transform 200ms ease">{{audioIcon}}</button>
 
 </div>
@@ -755,6 +757,8 @@ class Component extends DCLogic {
     try {
       if (localStorage.getItem('fs-audio-muted') === '1') this.setState({ audioMuted: true });
     } catch (e) {}
+    const song = document.getElementById('fs-bg-song');
+    if (song) song.loop = true;
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.initReveals();
   }
 
@@ -839,89 +843,54 @@ class Component extends DCLogic {
     clearInterval(this.timer);
     if (this.io) this.io.disconnect();
     this.seq.forEach((t) => clearTimeout(t));
-    if (this.sfxCtx) this.sfxCtx.close().catch(() => {});
+    const song = document.getElementById('fs-bg-song');
+    if (song) song.pause();
   }
 
   seq = [];
 
-  playPaperSound(variant) {
-    if (this.state.audioMuted) return;
-    try {
-      const Ctx = window.AudioContext || window.webkitAudioContext;
-      if (!Ctx) return;
-      if (!this.sfxCtx) this.sfxCtx = new Ctx();
-      const ctx = this.sfxCtx;
-      if (ctx.state === 'suspended') ctx.resume();
-      const now = ctx.currentTime;
-      const duration = variant === 'unfold' ? 0.5 : 0.35;
-
-      // Ráfaga de ruido moldeada como el roce de un papel.
-      const length = Math.max(1, Math.floor(ctx.sampleRate * duration));
-      const buffer = ctx.createBuffer(1, length, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      for (let i = 0; i < length; i++) {
-        const t = i / length;
-        const envelope = Math.pow(1 - t, 2.4) * (1 - Math.exp(-t * 60));
-        data[i] = (Math.random() * 2 - 1) * envelope;
-      }
-      const source = ctx.createBufferSource();
-      source.buffer = buffer;
-      const bandpass = ctx.createBiquadFilter();
-      bandpass.type = 'bandpass';
-      bandpass.frequency.value = variant === 'unfold' ? 3000 : 4200;
-      bandpass.Q.value = 0.6;
-      const highpass = ctx.createBiquadFilter();
-      highpass.type = 'highpass';
-      highpass.frequency.value = 800;
-      const gain = ctx.createGain();
-      gain.gain.value = 0.18;
-      source.connect(bandpass);
-      bandpass.connect(highpass);
-      highpass.connect(gain);
-      gain.connect(ctx.destination);
-      source.start(now);
-
-      // Un par de crujidos cortos superpuestos para dar textura.
-      const crackleCount = 3 + Math.floor(Math.random() * 3);
-      for (let c = 0; c < crackleCount; c++) {
-        const clickLength = Math.floor(ctx.sampleRate * 0.012);
-        const clickBuffer = ctx.createBuffer(1, clickLength, ctx.sampleRate);
-        const clickData = clickBuffer.getChannelData(0);
-        for (let i = 0; i < clickLength; i++) clickData[i] = (Math.random() * 2 - 1) * (1 - i / clickLength);
-        const clickSource = ctx.createBufferSource();
-        clickSource.buffer = clickBuffer;
-        const clickFilter = ctx.createBiquadFilter();
-        clickFilter.type = 'highpass';
-        clickFilter.frequency.value = 3200;
-        const clickGain = ctx.createGain();
-        clickGain.gain.value = 0.1;
-        clickSource.connect(clickFilter);
-        clickFilter.connect(clickGain);
-        clickGain.connect(ctx.destination);
-        clickSource.start(now + Math.random() * duration * 0.8);
-      }
-    } catch (e) {}
+  playOpeningSounds() {
+    const paper = document.getElementById('fs-paper-sound');
+    const song = document.getElementById('fs-bg-song');
+    if (paper) {
+      try {
+        paper.currentTime = 0;
+        paper.muted = this.state.audioMuted;
+        paper.volume = 0.7;
+        paper.play().catch(() => {});
+      } catch (e) {}
+    }
+    if (song) {
+      try {
+        song.muted = this.state.audioMuted;
+        song.volume = 0.35;
+        song.play().catch(() => {});
+      } catch (e) {}
+    }
   }
 
   toggleAudio = () => {
     const muted = !this.state.audioMuted;
     this.setState({ audioMuted: muted });
     try { localStorage.setItem('fs-audio-muted', muted ? '1' : '0'); } catch (e) {}
+    const paper = document.getElementById('fs-paper-sound');
+    const song = document.getElementById('fs-bg-song');
+    if (paper) paper.muted = muted;
+    if (song) song.muted = muted;
   };
 
   open = () => {
     if (this.state.stage > 0) return;
+    this.playOpeningSounds();
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.setState({ stage: 5 });
       window.scrollTo(0, 0);
       return;
     }
-    this.playPaperSound('open');
     const at = (ms, st) => this.seq.push(setTimeout(() => this.setState({ stage: st }), ms));
     this.setState({ stage: 1 });
     at(850, 2);
     at(1700, 3);
-    this.seq.push(setTimeout(() => this.playPaperSound('unfold'), 1750));
     at(2800, 4);
     this.seq.push(setTimeout(() => { this.setState({ stage: 5 }); window.scrollTo(0, 0); }, 3850));
   };

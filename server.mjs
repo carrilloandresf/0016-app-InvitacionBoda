@@ -145,7 +145,8 @@ const MIME_TYPES = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.webp': 'image/webp',
-  '.svg': 'image/svg+xml'
+  '.svg': 'image/svg+xml',
+  '.mp3': 'audio/mpeg'
 };
 
 const STATIC_FILES = new Map([
@@ -158,6 +159,8 @@ const STATIC_FILES = new Map([
   ['/img/novios-villa-de-leyva.jpeg', join(ROOT, 'img/novios-villa-de-leyva.jpeg')],
   ['/img/ramita-olivo.png', join(ROOT, 'img/ramita-olivo.png')],
   ['/img/favicon.svg', join(ROOT, 'img/favicon.svg')],
+  ['/sounds/paper-open.mp3', join(ROOT, 'sounds/paper-open.mp3')],
+  ['/sounds/ambient-song.mp3', join(ROOT, 'sounds/ambient-song.mp3')],
   ['/img/dress-code/hombre-01-beige-chaleco.jpeg', join(ROOT, 'img/dress-code/hombre-01-beige-chaleco.jpeg')],
   ['/img/dress-code/hombre-02-beige-tirantes.jpeg', join(ROOT, 'img/dress-code/hombre-02-beige-tirantes.jpeg')],
   ['/img/dress-code/hombre-03-tonos-tierra.jpeg', join(ROOT, 'img/dress-code/hombre-03-tonos-tierra.jpeg')],
