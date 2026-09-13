@@ -658,22 +658,6 @@
     </div>
   </section>
 
-  <section data-screen-label="Regalos" style="padding:clamp(52px,7vw,92px) clamp(24px,5vw,64px);background:var(--color-neutral-100);border-top:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider);text-align:center">
-    <div style="max-width:520px;margin:0 auto">
-      <h2 data-reveal="rise" style="font-size:clamp(28px,3.8vw,40px);font-weight:400;margin:0 0 16px;line-height:1.25">Su presencia es nuestro mejor regalo</h2>
-      <p data-reveal="rise" style="font-size:clamp(15px,1.7vw,18px);line-height:1.8;color:var(--color-neutral-800);margin:0 auto;max-width:36ch">Lo que más nos ilusiona es compartir este día contigo. Si además deseas tener un detalle con nosotros, tendremos lluvia de sobres durante la celebración.</p>
-      <div style="margin:clamp(30px,4vw,42px) auto 0;padding-top:clamp(22px,3vw,30px);border-top:1px solid var(--color-divider);max-width:280px">
-        <p data-reveal="rise" style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-neutral-700);margin:0 0 14px">¿Prefieres una opción digital?</p>
-        <button data-reveal="rise" onClick="{{openQr}}" style="border:none;background:transparent;padding:0;cursor:pointer">
-          <div style="width:min(38vw,130px);aspect-ratio:768/1369;border:5px solid var(--color-surface);outline:1px solid var(--color-divider);margin:0 auto;overflow:hidden;background:var(--color-surface)">
-            <img src="/img/QRCodePagos.jpeg" alt="Código QR y llave para transferencia" style="display:block;width:100%;height:100%;object-fit:contain">
-          </div>
-          <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:10px">Ver datos</div>
-        </button>
-      </div>
-    </div>
-  </section>
-
   <section data-screen-label="Cierre" style="padding:clamp(20px,3vw,40px) clamp(24px,5vw,64px) clamp(64px,8vw,100px);text-align:center">
     <div>
       <h2 data-reveal="rise" style="font-size:clamp(32px,4.4vw,46px);font-weight:400;margin:0 0 18px;line-height:1.2">Nos vemos en<br>Villa de Leyva.</h2>
@@ -724,12 +708,6 @@
     </div>
   </div>
 
-  <div style="position:fixed;inset:0;z-index:70;display:{{qrDisplay}};align-items:center;justify-content:center;padding:28px;background:color-mix(in srgb, var(--color-neutral-900) 80%, transparent)" onClick="{{closeQr}}">
-    <div style="width:min(100%,430px);max-height:88vh;aspect-ratio:768/1369;border:8px solid var(--color-bg);background:var(--color-bg);animation:fsIn 400ms ease both">
-      <img src="/img/QRCodePagos.jpeg" alt="Código QR y llave para transferencia ampliados" style="display:block;width:100%;height:100%;object-fit:contain">
-    </div>
-  </div>
-
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:932},&quot;familyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Familia Roman Rodriguez&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;guestNames&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Flor Esperanza Rodriguez, Rogger Roman Augusto&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;specialLodging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;receptionRevealed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Recepción&quot;},&quot;receptionName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Pietra Hotel&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Recepción&quot;}}">
@@ -744,7 +722,6 @@ class Component extends DCLogic {
     now: Date.now(),
     rsvp: {},
     sent: false,
-    qr: false,
     dress: false,
     dressCategory: 'women',
     lodgingSent: false,
@@ -1068,10 +1045,7 @@ class Component extends DCLogic {
       openWomen: () => this.setState({ dress: true, dressCategory: 'women' }),
       openMen: () => this.setState({ dress: true, dressCategory: 'men' }),
       closeDress: () => this.setState({ dress: false }),
-      stop: (ev) => ev.stopPropagation(),
-      qrDisplay: this.state.qr ? 'flex' : 'none',
-      openQr: () => this.setState({ qr: true }),
-      closeQr: () => this.setState({ qr: false })
+      stop: (ev) => ev.stopPropagation()
     };
   }
 }
