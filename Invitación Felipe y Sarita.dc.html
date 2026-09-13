@@ -171,9 +171,8 @@
     z-index:2;
     pointer-events:none;
     background:
-      linear-gradient(145deg,rgba(255,242,216,.2),transparent 42%),
-      radial-gradient(circle at 50% 42%,transparent 52%,rgba(35,25,17,.2) 112%);
-    mix-blend-mode:soft-light;
+      linear-gradient(155deg,rgba(255,248,233,.18),rgba(248,239,221,.04) 48%,rgba(239,225,201,.15)),
+      radial-gradient(ellipse at 50% 40%,transparent 48%,rgba(53,39,27,.18) 100%);
   }
   .fs-photo-frame::after {
     content:"";
@@ -191,21 +190,21 @@
     height:100%;
     object-fit:cover;
     border-radius:inherit;
-    filter:sepia(.12) saturate(.82) contrast(.96) brightness(1.03);
-    transform:scale(1.018);
+    filter:saturate(.78) contrast(.94) brightness(1.04);
+    transform:scale(1);
     transition:transform 6s cubic-bezier(.2,.7,.2,1),filter 700ms ease;
   }
   .fs-photo-frame:hover img {
     border-radius:inherit;
-    transform:scale(1.018);
-    filter:sepia(.12) saturate(.82) contrast(.96) brightness(1.03);
+    transform:scale(1);
+    filter:saturate(.78) contrast(.94) brightness(1.04);
   }
   .fs-photo-hero {
     border-radius:200px 200px 4px 4px;
     clip-path:inset(0 round 200px 200px 4px 4px);
-    aspect-ratio:3/4.1;
+    aspect-ratio:830/1007;
   }
-  .fs-photo-hero img { object-position:center 48%; }
+  .fs-photo-hero img { object-position:center; }
   .fs-page-leaf {
     position:absolute;
     top:-28px;
@@ -219,25 +218,6 @@
     filter:drop-shadow(-5px 9px 7px rgba(39,52,31,.12));
     transition:opacity 800ms ease 180ms;
   }
-  .fs-ending-photo-mat {
-    padding:7px;
-    background:var(--color-surface);
-    border:1px solid rgba(92,74,53,.24);
-    border-radius:160px 160px 4px 4px;
-    overflow:hidden;
-    box-shadow:0 18px 36px rgba(45,35,25,.17),0 1px 0 rgba(255,255,255,.9) inset;
-    transform:rotate(-1.4deg);
-  }
-  .fs-photo-ending {
-    border-width:0;
-    border-radius:150px 150px 3px 3px;
-    clip-path:inset(0 round 150px 150px 3px 3px);
-    aspect-ratio:3/3.6;
-    outline:none;
-    box-shadow:none;
-  }
-  .fs-photo-ending img { object-position:center 54%;filter:sepia(.17) saturate(.75) contrast(.98) brightness(1.04); }
-  .fs-photo-ending:hover img { filter:sepia(.17) saturate(.75) contrast(.98) brightness(1.04); }
   @keyframes fsFloat {
     0%   { transform: translateY(0) rotate(-0.5deg); }
     50%  { transform: translateY(-14px) rotate(0.6deg); }
@@ -320,7 +300,7 @@
     <div data-reveal="arch" style="position:relative;z-index:1;width:min(78vw,380px);margin:0 auto">
       <div style="position:absolute;top:-12px;left:-12px;right:-12px;bottom:-12px;border:1px solid color-mix(in srgb, var(--color-accent) 40%, transparent);border-radius:210px 210px 6px 6px;pointer-events:none"></div>
       <div class="fs-photo-frame fs-photo-hero">
-        <img src="/img/novios-villa-de-leyva.jpeg" alt="Felipe y Sarita en Villa de Leyva" fetchpriority="high">
+        <img src="/img/novios-retrato.jpeg" alt="Retrato de Felipe y Sarita" width="830" height="1007" fetchpriority="high">
       </div>
     </div>
     <div style="margin-top:clamp(36px,6vw,58px);display:flex;flex-direction:column;align-items:center;gap:16px">
@@ -699,13 +679,6 @@
   </section>
 
   <section data-screen-label="Cierre" style="padding:clamp(20px,3vw,40px) clamp(24px,5vw,64px) clamp(64px,8vw,100px);text-align:center">
-    <div data-reveal="arch" style="position:relative;width:min(58vw,300px);margin:0 auto clamp(34px,5vw,52px)">
-      <div class="fs-ending-photo-mat">
-        <div class="fs-photo-frame fs-photo-ending">
-          <img src="/img/novios-anillo.jpeg" alt="Las manos de Felipe y Sarita con el anillo de compromiso" loading="lazy">
-        </div>
-      </div>
-    </div>
     <div>
       <h2 data-reveal="rise" style="font-size:clamp(32px,4.4vw,46px);font-weight:400;margin:0 0 18px;line-height:1.2">Nos vemos en<br>Villa de Leyva.</h2>
       <div data-reveal="rise" style="font-family:var(--font-heading);font-style:italic;font-size:clamp(21px,2.6vw,26px);color:var(--color-accent-700)">Felipe &amp; Sarita</div>

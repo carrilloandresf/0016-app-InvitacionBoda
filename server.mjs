@@ -125,6 +125,7 @@ const STATIC_FILES = new Map([
   ['/img/SiluetaVirgen.jpeg', join(ROOT, 'img/SiluetaVirgen.jpeg')],
   ['/img/QRCodePagos.jpeg', join(ROOT, 'img/QRCodePagos.jpeg')],
   ['/img/novios-anillo.jpeg', join(ROOT, 'img/novios-anillo.jpeg')],
+  ['/img/novios-retrato.jpeg', join(ROOT, 'img/novios-retrato.jpeg')],
   ['/img/novios-villa-de-leyva.jpeg', join(ROOT, 'img/novios-villa-de-leyva.jpeg')],
   ['/img/ramita-olivo.png', join(ROOT, 'img/ramita-olivo.png')],
   ['/img/favicon.svg', join(ROOT, 'img/favicon.svg')],
