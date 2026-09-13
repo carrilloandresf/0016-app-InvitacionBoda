@@ -718,6 +718,8 @@
     </div>
   </div>
 
+  <button onClick="{{toggleAudio}}" aria-label="{{audioAriaLabel}}" title="{{audioAriaLabel}}" style="display:{{audioButtonDisplay}};position:fixed;right:18px;bottom:18px;z-index:70;width:46px;height:46px;align-items:center;justify-content:center;border-radius:50%;border:1px solid var(--color-divider);background:var(--color-surface);box-shadow:0 8px 20px rgba(32,31,29,.18);cursor:pointer;font-size:18px;line-height:1;transition:opacity 320ms ease,transform 200ms ease">{{audioIcon}}</button>
+
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:932},&quot;familyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Familia Roman Rodriguez&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;guestNames&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Flor Esperanza Rodriguez, Rogger Roman Augusto&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;specialLodging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;receptionRevealed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Recepción&quot;},&quot;receptionName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Pietra Hotel&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Recepción&quot;}}">
@@ -742,13 +744,17 @@ class Component extends DCLogic {
     loadError: '',
     submitError: '',
     saving: false,
-    settings: { receptionVisibility: 'auto', rsvpLockEnabled: true }
+    settings: { receptionVisibility: 'auto', rsvpLockEnabled: true },
+    audioMuted: false
   };
 
   componentDidMount() {
     this.timer = setInterval(() => this.setState({ now: Date.now() }), 1000);
     this.loadInvitation();
     this.loadSettings();
+    try {
+      if (localStorage.getItem('fs-audio-muted') === '1') this.setState({ audioMuted: true });
+    } catch (e) {}
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) this.initReveals();
   }
 
@@ -833,12 +839,93 @@ class Component extends DCLogic {
     clearInterval(this.timer);
     if (this.io) this.io.disconnect();
     this.seq.forEach((t) => clearTimeout(t));
+    clearInterval(this.audioInterval);
+    if (this.audioCtx) this.audioCtx.close().catch(() => {});
   }
 
   seq = [];
 
+  initAmbientAudio() {
+    if (this.audioInited) return;
+    this.audioInited = true;
+    try {
+      const Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      const ctx = new Ctx();
+      this.audioCtx = ctx;
+
+      const master = ctx.createGain();
+      master.gain.value = 0;
+      master.connect(ctx.destination);
+      this.masterGain = master;
+
+      const toneFilter = ctx.createBiquadFilter();
+      toneFilter.type = 'lowpass';
+      toneFilter.frequency.value = 2200;
+
+      const delay = ctx.createDelay(2);
+      delay.delayTime.value = 0.46;
+      const feedback = ctx.createGain();
+      feedback.gain.value = 0.3;
+      const delayTone = ctx.createBiquadFilter();
+      delayTone.type = 'lowpass';
+      delayTone.frequency.value = 1600;
+      delay.connect(feedback);
+      feedback.connect(delayTone);
+      delayTone.connect(delay);
+
+      toneFilter.connect(master);
+      toneFilter.connect(delay);
+      delay.connect(master);
+
+      this.audioBus = toneFilter;
+
+      const chords = [
+        [261.63, 329.63, 392.0, 493.88],
+        [220.0, 261.63, 329.63, 415.3],
+        [174.61, 220.0, 261.63, 349.23],
+        [196.0, 246.94, 293.66, 369.99]
+      ];
+      let chordIndex = 0;
+      const playChord = () => {
+        const now = ctx.currentTime;
+        const chord = chords[chordIndex % chords.length];
+        chordIndex++;
+        chord.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          osc.type = i === 0 ? 'sine' : 'triangle';
+          osc.frequency.value = freq;
+          osc.detune.value = (Math.random() - 0.5) * 6;
+          const g = ctx.createGain();
+          g.gain.value = 0;
+          osc.connect(g);
+          g.connect(this.audioBus);
+          osc.start(now);
+          const peak = i === 0 ? 0.07 : 0.05;
+          g.gain.linearRampToValueAtTime(peak, now + 3.2);
+          g.gain.linearRampToValueAtTime(0, now + 7.6);
+          osc.stop(now + 7.8);
+        });
+      };
+      playChord();
+      this.audioInterval = setInterval(playChord, 6400);
+      master.gain.linearRampToValueAtTime(this.state.audioMuted ? 0 : 0.16, ctx.currentTime + 2.5);
+    } catch (e) {}
+  }
+
+  toggleAudio = () => {
+    const muted = !this.state.audioMuted;
+    this.setState({ audioMuted: muted });
+    try { localStorage.setItem('fs-audio-muted', muted ? '1' : '0'); } catch (e) {}
+    if (this.audioCtx && this.masterGain) {
+      if (!muted && this.audioCtx.state === 'suspended') this.audioCtx.resume();
+      this.masterGain.gain.linearRampToValueAtTime(muted ? 0 : 0.16, this.audioCtx.currentTime + 0.6);
+    }
+  };
+
   open = () => {
     if (this.state.stage > 0) return;
+    this.initAmbientAudio();
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       this.setState({ stage: 5 });
       window.scrollTo(0, 0);
@@ -1067,7 +1154,11 @@ class Component extends DCLogic {
       openWomen: () => this.setState({ dress: true, dressCategory: 'women' }),
       openMen: () => this.setState({ dress: true, dressCategory: 'men' }),
       closeDress: () => this.setState({ dress: false }),
-      stop: (ev) => ev.stopPropagation()
+      stop: (ev) => ev.stopPropagation(),
+      audioButtonDisplay: st >= 5 ? 'flex' : 'none',
+      audioIcon: this.state.audioMuted ? '🔇' : '🎵',
+      audioAriaLabel: this.state.audioMuted ? 'Activar música ambiental' : 'Silenciar música ambiental',
+      toggleAudio: this.toggleAudio
     };
   }
 }
