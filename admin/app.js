@@ -27,7 +27,7 @@ const elements = {
 const labels = {
   meals: { p1: 'Murillo estofado', p2: 'Churrasco de pollo' },
   drinks: { b1: 'Soda de tamarindo y limonaria', b2: 'Soda de arándanos y moras' },
-  guestTypes: { adult: 'Adulto', youth: 'Joven', child: 'Niño' }
+  guestTypes: { adult: 'Adulto', youth: 'Joven', child: 'Niño', baby: 'Bebé' }
 };
 
 function escapeHtml(value) {
@@ -63,6 +63,7 @@ function renderSummary() {
   setStat('#stat-p1', summary.meals?.p1);
   setStat('#stat-p2', summary.meals?.p2);
   setStat('#stat-child-menu', summary.meals?.child);
+  setStat('#stat-baby', summary.meals?.baby);
   setStat('#stat-liquor-yes', summary.liquor?.yes);
   setStat('#stat-liquor-no', summary.liquor?.no);
   setStat('#stat-b1', summary.drinks?.b1);
@@ -133,11 +134,15 @@ function renderCard(invitation) {
   const rows = invitation.guests.map((guest) => {
     const [answer, answerClass] = guestAnswer(guest);
     const menu = guest.attendance === 'yes'
-      ? (guest.guestType === 'child' ? 'Menú infantil' : (labels.meals[guest.meal] || 'Pendiente'))
+      ? (guest.guestType === 'child' ? 'Menú infantil' : guest.guestType === 'baby' ? 'No aplica' : (labels.meals[guest.meal] || 'Pendiente'))
       : '—';
-    const drink = guest.attendance === 'yes' ? (labels.drinks[guest.drink] || 'Pendiente') : '—';
+    const drink = guest.attendance === 'yes'
+      ? (['child', 'baby'].includes(guest.guestType) ? 'No aplica' : (labels.drinks[guest.drink] || 'Pendiente'))
+      : '—';
     const liquor = guest.attendance === 'yes' ? (guest.guestType === 'adult' ? 'Sí' : 'No') : '—';
-    const cake = guest.attendance === 'yes' ? (guest.cake ? 'Sí' : 'No') : '—';
+    const cake = guest.attendance === 'yes'
+      ? (guest.guestType === 'baby' ? 'No aplica' : (guest.cake ? 'Sí' : 'No'))
+      : '—';
     return `
       <tr>
         <td>${escapeHtml(guest.name)}</td>
@@ -231,7 +236,8 @@ function addGuestField(guest = {}) {
   [
     ['adult', 'Adulto'],
     ['youth', 'Joven'],
-    ['child', 'Niño']
+    ['child', 'Niño'],
+    ['baby', 'Bebé']
   ].forEach(([value, label]) => {
     const option = document.createElement('option');
     option.value = value;

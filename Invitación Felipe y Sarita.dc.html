@@ -465,7 +465,13 @@
               <sc-if value="{{g.attending}}" hint-placeholder-val="{{ false }}">
                 <div style="{{g.menuVars}}">
                   <div style="margin-top:22px;padding-top:20px;border-top:1px solid var(--color-divider);animation:fsIn 650ms cubic-bezier(.22,.7,.25,1) both">
-                    <sc-if value="{{g.adultMenu}}" hint-placeholder-val="{{ true }}">
+                    <sc-if value="{{g.babyMode}}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:15px 16px;border-radius:6px;background:var(--color-accent-100);border:1px solid var(--color-accent)">
+                        <div style="font-family:var(--font-heading);font-size:19px;color:var(--color-accent-700)">¡Qué alegría que nos acompañe!</div>
+                        <div style="font-size:13px;line-height:1.6;color:var(--color-neutral-700);margin-top:4px">Para bebés solo confirmamos su asistencia; no se les asigna plato ni bebida.</div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{g.menuChoice}}" hint-placeholder-val="{{ true }}">
                       <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:12px">Elige tu menú</div>
                       <div style="display:grid;gap:10px">
                         <button onClick="{{g.p1}}" style="text-align:left;padding:15px 16px;border-radius:6px;cursor:pointer;transition:background 320ms ease,border-color 320ms ease;background:var(--p1-bg, transparent);border:1px solid var(--p1-bd, var(--color-divider))">
@@ -482,18 +488,22 @@
                       <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:12px">Menú asignado</div>
                       <div style="padding:15px 16px;border-radius:6px;background:var(--color-accent-100);border:1px solid var(--color-accent)">
                         <div style="font-family:var(--font-heading);font-size:19px;color:var(--color-accent-700)">Menú infantil</div>
-                        <div style="font-size:13px;line-height:1.6;color:var(--color-neutral-700);margin-top:4px">Esta opción ya está reservada para los niños y no requiere selección.</div>
+                        <div style="font-size:13px;line-height:1.6;color:var(--color-neutral-700);margin-top:4px">Esta opción ya viene completa e incluye su bebida; no requiere selección.</div>
                       </div>
                     </sc-if>
-                    <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent-700);margin:20px 0 12px">Bebida</div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                      <button onClick="{{g.b1}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b1-bg, transparent);color:var(--b1-fg, var(--color-text));border:1px solid var(--b1-bd, var(--color-divider))">Soda de tamarindo y limonaria</button>
-                      <button onClick="{{g.b2}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b2-bg, transparent);color:var(--b2-fg, var(--color-text));border:1px solid var(--b2-bd, var(--color-divider))">Soda de arándanos y moras</button>
-                    </div>
-                    <button onClick="{{g.cake}}" style="width:100%;margin-top:12px;min-height:46px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;transition:background 320ms ease,border-color 320ms ease;background:var(--t-bg, transparent);border:1px solid var(--t-bd, var(--color-divider))">
-                      <span style="font-family:var(--font-heading);font-size:16px;color:var(--t-fg, var(--color-text))">Porción de torta</span>
-                      <span style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--t-fg, var(--color-neutral-700))">{{g.cakeLabel}}</span>
-                    </button>
+                    <sc-if value="{{g.showDrink}}" hint-placeholder-val="{{ true }}">
+                      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent-700);margin:20px 0 12px">Bebida</div>
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                        <button onClick="{{g.b1}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b1-bg, transparent);color:var(--b1-fg, var(--color-text));border:1px solid var(--b1-bd, var(--color-divider))">Soda de tamarindo y limonaria</button>
+                        <button onClick="{{g.b2}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b2-bg, transparent);color:var(--b2-fg, var(--color-text));border:1px solid var(--b2-bd, var(--color-divider))">Soda de arándanos y moras</button>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{g.showCake}}" hint-placeholder-val="{{ true }}">
+                      <button onClick="{{g.cake}}" style="width:100%;margin-top:12px;min-height:46px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;transition:background 320ms ease,border-color 320ms ease;background:var(--t-bg, transparent);border:1px solid var(--t-bd, var(--color-divider))">
+                        <span style="font-family:var(--font-heading);font-size:16px;color:var(--t-fg, var(--color-text))">Porción de torta</span>
+                        <span style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--t-fg, var(--color-neutral-700))">{{g.cakeLabel}}</span>
+                      </button>
+                    </sc-if>
                   </div>
                 </div>
               </sc-if>
@@ -878,9 +888,9 @@ class Component extends DCLogic {
       return {
         id: Number(guest.id),
         attendance: answer.a,
-        meal: guest.adultMenu ? (answer.plato || null) : null,
-        drink: answer.bebida || null,
-        cake: answer.cake !== false
+        meal: guest.menuChoice ? (answer.plato || null) : null,
+        drink: guest.showDrink ? (answer.bebida || null) : null,
+        cake: guest.showCake ? (answer.cake !== false) : null
       };
     });
     this.setState({ saving: true, submitError: '' });
@@ -938,26 +948,37 @@ class Component extends DCLogic {
       const name = person.name;
       const id = String(person.id ?? ('g' + i));
       const guestType = person.guestType || 'adult';
-      const adultMenu = guestType !== 'child';
+      const menuChoice = guestType === 'adult' || guestType === 'youth';
+      const childMenu = guestType === 'child';
+      const babyMode = guestType === 'baby';
+      const showDrink = menuChoice;
+      const showCake = !babyMode;
       const raw = this.state.rsvp[id];
       const e = typeof raw === 'string' ? { a: raw } : (raw || {});
       const pick = e.a;
       const cake = e.cake !== false;
       const menuVars = Object.assign({},
         e.plato ? on(e.plato) : null,
-        e.bebida ? on(e.bebida) : null,
-        cake ? on('t') : null);
+        (showDrink && e.bebida) ? on(e.bebida) : null,
+        (showCake && cake) ? on('t') : null);
       const menuLabel = pick === 'yes'
-        ? [adultMenu ? (PLATOS[e.plato] || 'Menú pendiente') : 'Menú infantil', BEBIDAS[e.bebida] || 'Bebida pendiente', cake ? 'con torta' : 'sin torta'].join(' · ')
+        ? (babyMode ? 'Asistencia confirmada' : [
+            menuChoice ? (PLATOS[e.plato] || 'Menú pendiente') : 'Menú infantil',
+            showDrink ? (BEBIDAS[e.bebida] || 'Bebida pendiente') : null,
+            showCake ? (cake ? 'con torta' : 'sin torta') : null
+          ].filter(Boolean).join(' · '))
         : '—';
       return {
         name, id, guestType,
-        typeLabel: guestType === 'child' ? 'Niño' : guestType === 'youth' ? 'Joven' : 'Adulto',
+        typeLabel: guestType === 'child' ? 'Niño' : guestType === 'youth' ? 'Joven' : guestType === 'baby' ? 'Bebé' : 'Adulto',
         vars: pick === 'yes' ? yesVars : pick === 'no' ? noVars : {},
         label: pick === 'yes' ? 'Asistirá' : pick === 'no' ? 'No podrá asistir' : 'Pendiente',
         attending: pick === 'yes',
-        adultMenu,
-        childMenu: !adultMenu,
+        menuChoice,
+        childMenu,
+        babyMode,
+        showDrink,
+        showCake,
         menuVars, menuLabel,
         cakeLabel: cake ? 'Incluida' : 'Sin torta',
         yes: (ev) => {
@@ -977,7 +998,8 @@ class Component extends DCLogic {
       const raw = this.state.rsvp[g.id];
       const e = typeof raw === 'string' ? { a: raw } : (raw || {});
       if (!e.a) return false;
-      return e.a === 'no' || ((!g.adultMenu || e.plato) && e.bebida);
+      if (e.a === 'no' || g.babyMode) return true;
+      return (!g.menuChoice || e.plato) && (!g.showDrink || e.bebida);
     });
 
     const diff = Math.max(0, CEREMONY - this.state.now);

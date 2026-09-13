@@ -48,7 +48,7 @@ db.exec(`
     id INTEGER PRIMARY KEY,
     invitation_id INTEGER NOT NULL REFERENCES invitations(id) ON DELETE CASCADE,
     name TEXT NOT NULL,
-    guest_type TEXT NOT NULL DEFAULT 'adult' CHECK (guest_type IN ('adult', 'youth', 'child')),
+    guest_type TEXT NOT NULL DEFAULT 'adult' CHECK (guest_type IN ('adult', 'youth', 'child', 'baby')),
     attendance TEXT CHECK (attendance IN ('yes', 'no')),
     meal TEXT CHECK (meal IN ('p1', 'p2')),
     drink TEXT CHECK (drink IN ('b1', 'b2')),
@@ -73,7 +73,35 @@ if (!guestColumns.some((column) => column.name === 'guest_type')) {
   db.exec(`
     ALTER TABLE guests
     ADD COLUMN guest_type TEXT NOT NULL DEFAULT 'adult'
-    CHECK (guest_type IN ('adult', 'youth', 'child'))
+    CHECK (guest_type IN ('adult', 'youth', 'child', 'baby'))
+  `);
+}
+
+// Migración no destructiva para permitir la categoría "bebé" en bases que ya
+// tenían la restricción CHECK anterior (sin 'baby'). SQLite no permite alterar
+// un CHECK existente, así que se reconstruye la tabla conservando los datos.
+const guestsTableSql = db.prepare("SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'guests'").get()?.sql || '';
+if (guestsTableSql && !guestsTableSql.includes("'baby'")) {
+  db.exec(`
+    BEGIN IMMEDIATE;
+    ALTER TABLE guests RENAME TO guests_old_baby_migration;
+    CREATE TABLE guests (
+      id INTEGER PRIMARY KEY,
+      invitation_id INTEGER NOT NULL REFERENCES invitations(id) ON DELETE CASCADE,
+      name TEXT NOT NULL,
+      guest_type TEXT NOT NULL DEFAULT 'adult' CHECK (guest_type IN ('adult', 'youth', 'child', 'baby')),
+      attendance TEXT CHECK (attendance IN ('yes', 'no')),
+      meal TEXT CHECK (meal IN ('p1', 'p2')),
+      drink TEXT CHECK (drink IN ('b1', 'b2')),
+      cake INTEGER CHECK (cake IN (0, 1)),
+      sort_order INTEGER NOT NULL DEFAULT 0,
+      updated_at TEXT,
+      UNIQUE (invitation_id, name)
+    );
+    INSERT INTO guests SELECT * FROM guests_old_baby_migration;
+    DROP TABLE guests_old_baby_migration;
+    CREATE INDEX IF NOT EXISTS guests_invitation_id_idx ON guests(invitation_id);
+    COMMIT;
   `);
 }
 
@@ -318,7 +346,7 @@ function parseInvitationPayload(body, { allowIds = false } = {}) {
 
   const guests = body.guests.map((guest, index) => {
     const guestType = guest?.guestType || 'adult';
-    if (!['adult', 'youth', 'child'].includes(guestType)) {
+    if (!['adult', 'youth', 'child', 'baby'].includes(guestType)) {
       throw validationError(`La categoría del invitado ${index + 1} no es válida.`);
     }
     return {
@@ -366,8 +394,10 @@ function guestRows(invitationId) {
 function guestResponseComplete(guest) {
   if (!guest.attendance) return false;
   if (guest.attendance === 'no') return true;
+  if (guest.guestType === 'baby') return true;
   const hasMeal = guest.guestType === 'child' || ['p1', 'p2'].includes(guest.meal);
-  return hasMeal && ['b1', 'b2'].includes(guest.drink);
+  const hasDrink = guest.guestType === 'child' || ['b1', 'b2'].includes(guest.drink);
+  return hasMeal && hasDrink;
 }
 
 function publicInvitation(token) {
@@ -421,7 +451,8 @@ function summary(invitations) {
     meals: {
       p1: guests.filter((guest) => guest.meal === 'p1').length,
       p2: guests.filter((guest) => guest.meal === 'p2').length,
-      child: guests.filter((guest) => guest.attendance === 'yes' && guest.guestType === 'child').length
+      child: guests.filter((guest) => guest.attendance === 'yes' && guest.guestType === 'child').length,
+      baby: guests.filter((guest) => guest.attendance === 'yes' && guest.guestType === 'baby').length
     },
     drinks: {
       b1: guests.filter((guest) => guest.drink === 'b1').length,
@@ -527,16 +558,18 @@ function saveRsvp(token, body) {
     const guest = byId.get(id);
     byId.delete(id);
     if (!['yes', 'no'].includes(answer.attendance)) throw validationError('Indica si cada persona asistirá.');
-    if (answer.attendance === 'yes' && guest.guestType !== 'child' && !['p1', 'p2'].includes(answer.meal)) {
+    const needsMealAndDrink = answer.attendance === 'yes' && !['child', 'baby'].includes(guest.guestType);
+    if (needsMealAndDrink && !['p1', 'p2'].includes(answer.meal)) {
       throw validationError('Selecciona un plato para cada asistente adulto o joven.');
     }
-    if (answer.attendance === 'yes' && !['b1', 'b2'].includes(answer.drink)) throw validationError('Selecciona una bebida para cada asistente.');
+    if (needsMealAndDrink && !['b1', 'b2'].includes(answer.drink)) throw validationError('Selecciona una bebida para cada asistente.');
+    const hasFullService = answer.attendance === 'yes' && guest.guestType !== 'baby';
     return {
       id,
       attendance: answer.attendance,
-      meal: answer.attendance === 'yes' && guest.guestType !== 'child' ? answer.meal : null,
-      drink: answer.attendance === 'yes' ? answer.drink : null,
-      cake: answer.attendance === 'yes' ? answer.cake !== false : null
+      meal: needsMealAndDrink ? answer.meal : null,
+      drink: needsMealAndDrink ? answer.drink : null,
+      cake: hasFullService ? answer.cake !== false : null
     };
   });
   if (byId.size) throw validationError('Debes responder una sola vez por cada persona.');
@@ -575,18 +608,20 @@ function invitationsCsv(invitations) {
   ]];
   const mealLabels = { p1: 'Murillo Estofado', p2: 'Churrasco de Pollo' };
   const drinkLabels = { b1: 'Soda de tamarindo y limonaria', b2: 'Soda de arándanos y moras' };
-  const typeLabels = { adult: 'Adulto', youth: 'Joven', child: 'Niño' };
+  const typeLabels = { adult: 'Adulto', youth: 'Joven', child: 'Niño', baby: 'Bebé' };
   for (const invitation of invitations) {
     for (const guest of invitation.guests) {
+      const attendingBaby = guest.attendance === 'yes' && guest.guestType === 'baby';
       rows.push([
         invitation.familyName,
         guest.name,
         typeLabels[guest.guestType] || 'Adulto',
         guest.attendance === 'yes' ? 'Asistirá' : guest.attendance === 'no' ? 'No asistirá' : 'Pendiente',
-        guest.attendance === 'yes' && guest.guestType === 'child' ? 'Menú infantil' : (mealLabels[guest.meal] || ''),
-        drinkLabels[guest.drink] || '',
+        guest.attendance === 'yes' && guest.guestType === 'child' ? 'Menú infantil' :
+          attendingBaby ? 'No aplica' : (mealLabels[guest.meal] || ''),
+        attendingBaby ? 'No aplica' : (drinkLabels[guest.drink] || ''),
         guest.attendance === 'yes' ? (guest.guestType === 'adult' ? 'Sí' : 'No') : '',
-        guest.cake === true ? 'Sí' : guest.cake === false ? 'No' : '',
+        attendingBaby ? 'No aplica' : (guest.cake === true ? 'Sí' : guest.cake === false ? 'No' : ''),
         invitation.lodgingInterest ? 'Sí' : 'No',
         invitation.respondedAt || '',
         `/?i=${invitation.token}&v=${SHARE_VERSION}`
