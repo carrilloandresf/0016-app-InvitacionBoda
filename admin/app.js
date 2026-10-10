@@ -73,6 +73,23 @@ function renderSummary() {
   setStat('#stat-cake', summary.cake);
 }
 
+function renderFamilySummary() {
+  // Una familia cuenta como confirmada si al menos una de sus personas ya respondió.
+  let complete = 0;
+  let partial = 0;
+  let none = 0;
+  state.invitations.forEach((invitation) => {
+    const answered = invitation.guests.filter((guest) => guest.attendance !== null).length;
+    if (answered === 0) none += 1;
+    else if (answered === invitation.guests.length) complete += 1;
+    else partial += 1;
+  });
+  setStat('#stat-fam-confirmed', complete + partial);
+  setStat('#stat-fam-complete', complete);
+  setStat('#stat-fam-partial', partial);
+  setStat('#stat-fam-none', none);
+}
+
 function renderSettings() {
   const { receptionVisibility, rsvpLockEnabled } = state.settings;
   elements.receptionVisibility.querySelectorAll('.segmented-option').forEach((button) => {
@@ -214,6 +231,7 @@ async function load() {
     state.invitations = data.invitations;
     state.summary = data.summary;
     renderSummary();
+    renderFamilySummary();
     renderList();
   } catch (error) {
     elements.loading.textContent = error.message;
