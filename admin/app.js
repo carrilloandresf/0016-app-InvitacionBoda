@@ -73,21 +73,16 @@ function renderSummary() {
   setStat('#stat-cake', summary.cake);
 }
 
+// Una familia cuenta como confirmada (completa) si al menos una de sus personas confirmó asistencia.
+function familyConfirmed(invitation) {
+  return invitation.guests.some((guest) => guest.attendance === 'yes');
+}
+
 function renderFamilySummary() {
-  // Una familia cuenta como confirmada si al menos una de sus personas ya respondió.
-  let complete = 0;
-  let partial = 0;
-  let none = 0;
-  state.invitations.forEach((invitation) => {
-    const answered = invitation.guests.filter((guest) => guest.attendance !== null).length;
-    if (answered === 0) none += 1;
-    else if (answered === invitation.guests.length) complete += 1;
-    else partial += 1;
-  });
-  setStat('#stat-fam-confirmed', complete + partial);
-  setStat('#stat-fam-complete', complete);
-  setStat('#stat-fam-partial', partial);
-  setStat('#stat-fam-none', none);
+  const confirmed = state.invitations.filter(familyConfirmed);
+  setStat('#stat-fam-confirmed', confirmed.length);
+  setStat('#stat-fam-people', confirmed.reduce((total, invitation) => total + invitation.guests.length, 0));
+  setStat('#stat-fam-unconfirmed', state.invitations.length - confirmed.length);
 }
 
 function renderSettings() {
@@ -180,8 +175,8 @@ function renderCard(invitation) {
         <div>
           <div class="invitation-title">
             <h3>${escapeHtml(invitation.familyName)}</h3>
-            <span class="status ${invitation.responded ? 'status-done' : 'status-pending'}">
-              ${invitation.responded ? 'Confirmada' : 'Pendiente'}
+            <span class="status ${familyConfirmed(invitation) ? 'status-done' : 'status-pending'}">
+              ${familyConfirmed(invitation) ? 'Confirmada' : (answered === invitation.guests.length ? 'No asiste' : 'Pendiente')}
             </span>
             ${invitation.lodgingInterest ? '<span class="status lodging-badge">Hospedaje</span>' : ''}
           </div>
@@ -208,8 +203,8 @@ function renderCard(invitation) {
 function renderList() {
   const query = state.filter.trim().toLocaleLowerCase('es');
   const filtered = state.invitations.filter((invitation) => {
-    if (state.statusFilter === 'confirmed' && !invitation.responded) return false;
-    if (state.statusFilter === 'pending' && invitation.responded) return false;
+    if (state.statusFilter === 'confirmed' && !familyConfirmed(invitation)) return false;
+    if (state.statusFilter === 'pending' && familyConfirmed(invitation)) return false;
     return !query ||
       invitation.familyName.toLocaleLowerCase('es').includes(query) ||
       invitation.guests.some((guest) => guest.name.toLocaleLowerCase('es').includes(query));
