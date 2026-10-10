@@ -2,6 +2,7 @@ const state = {
   invitations: [],
   summary: null,
   filter: '',
+  statusFilter: 'all',
   settings: { receptionVisibility: 'auto', rsvpLockEnabled: true }
 };
 
@@ -10,6 +11,7 @@ const elements = {
   loading: document.querySelector('#loading'),
   empty: document.querySelector('#empty'),
   search: document.querySelector('#search'),
+  statusFilter: document.querySelector('#status-filter'),
   dialog: document.querySelector('#invitation-dialog'),
   form: document.querySelector('#invitation-form'),
   formError: document.querySelector('#form-error'),
@@ -188,16 +190,19 @@ function renderCard(invitation) {
 
 function renderList() {
   const query = state.filter.trim().toLocaleLowerCase('es');
-  const filtered = !query ? state.invitations : state.invitations.filter((invitation) =>
-    invitation.familyName.toLocaleLowerCase('es').includes(query) ||
-    invitation.guests.some((guest) => guest.name.toLocaleLowerCase('es').includes(query))
-  );
+  const filtered = state.invitations.filter((invitation) => {
+    if (state.statusFilter === 'confirmed' && !invitation.responded) return false;
+    if (state.statusFilter === 'pending' && invitation.responded) return false;
+    return !query ||
+      invitation.familyName.toLocaleLowerCase('es').includes(query) ||
+      invitation.guests.some((guest) => guest.name.toLocaleLowerCase('es').includes(query));
+  });
 
   elements.loading.hidden = true;
   elements.empty.hidden = state.invitations.length !== 0;
   elements.list.innerHTML = filtered.map(renderCard).join('');
-  if (query && !filtered.length) {
-    elements.list.innerHTML = '<div class="state-card">No hay resultados para esta búsqueda.</div>';
+  if ((query || state.statusFilter !== 'all') && !filtered.length) {
+    elements.list.innerHTML = '<div class="state-card">No hay resultados para este filtro o búsqueda.</div>';
   }
 }
 
@@ -377,6 +382,16 @@ elements.receptionVisibility.addEventListener('click', (event) => {
 });
 elements.rsvpLock.addEventListener('change', () => {
   updateSettings({ rsvpLockEnabled: elements.rsvpLock.checked });
+});
+
+elements.statusFilter.addEventListener('click', (event) => {
+  const button = event.target.closest('.segmented-option');
+  if (!button || button.classList.contains('active')) return;
+  state.statusFilter = button.dataset.value;
+  elements.statusFilter.querySelectorAll('.segmented-option').forEach((option) => {
+    option.classList.toggle('active', option === button);
+  });
+  renderList();
 });
 
 document.querySelector('#new-invitation').addEventListener('click', () => openForm());

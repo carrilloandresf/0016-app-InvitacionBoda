@@ -66,6 +66,11 @@
         <span class="sr-only">Buscar familia o invitado</span>
         <input id="search" type="search" placeholder="Buscar familia o invitado…" autocomplete="off">
       </label>
+      <div class="segmented" id="status-filter" role="radiogroup" aria-label="Filtrar invitaciones por estado">
+        <button type="button" class="segmented-option active" data-value="all">Todas</button>
+        <button type="button" class="segmented-option" data-value="confirmed">Confirmadas</button>
+        <button type="button" class="segmented-option" data-value="pending">No confirmadas</button>
+      </div>
       <div class="control-actions">
         <button id="refresh" class="button button-ghost" type="button">Actualizar</button>
         <a class="button button-ghost" href="/api/admin/export.csv" download>Exportar CSV</a>
