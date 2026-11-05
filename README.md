@@ -112,3 +112,11 @@ La aplicación queda en `http://localhost:3016` y crea `data/wedding.sqlite`.
 ## Publicación
 
 Para ponerla en Internet, ubica el contenedor detrás de un proxy inverso con un dominio y HTTPS (por ejemplo Caddy, Traefik o Nginx). HTTPS es especialmente importante porque protege tanto los enlaces familiares como las credenciales del panel durante el transporte.
+
+## Control privado de gastos y abonos
+
+En `/admin/gastos` se administran los gastos de la boda con las mismas credenciales del panel `/admin`. Se pueden agregar conceptos, ajustar presupuestos, registrar o editar pagos, anular movimientos sin borrar el historial y descargar un CSV.
+
+La primera ejecución de esta versión registra automáticamente los cuatro conceptos y cinco abonos informados el 5 de noviembre de 2026. Las fechas de esos pagos se conservan vacías, ya que no se especificaron. La carga es **idempotente**: un marcador en SQLite impide repetirla en los reinicios o despliegues.
+
+El presupuesto, los abonos y los saldos se calculan en el servidor y persisten en `wedding-data`, el mismo volumen de SQLite respaldado en el procedimiento anterior. Los importes se manejan en pesos colombianos enteros; no se admiten abonos superiores al saldo. El acceso requiere autenticación de administrador y debe realizarse por HTTPS.
