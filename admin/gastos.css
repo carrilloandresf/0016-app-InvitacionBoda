@@ -1,3 +1,4 @@
+[hidden] { display: none !important; }
 /* Control financiero: conserva la identidad cálida y elegante del panel de la boda. */
 .finance-topbar { align-items: center; }
 .finance-subtitle { margin: 12px 0 0; color: var(--muted); line-height: 1.5; font-size: 14px; }
