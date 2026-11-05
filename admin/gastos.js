@@ -101,6 +101,8 @@ function render() {
     state.items.filter(item => item.pending === 0).length + ' totalmente pagados';
   const term = $('#expense-search').value.toLocaleLowerCase('es').trim();
   const rows = state.items.filter(item => item.name.toLocaleLowerCase('es').includes(term));
+  if (rows.length && !rows.some(item => item.id === selectedId)) selectedId = rows[0].id;
+  if (!rows.length && term) selectedId = null;
   $('#finance-loading').hidden = true;
   $('#finance-empty').hidden = rows.length > 0;
   $('#expense-grid').hidden = rows.length === 0;
@@ -167,7 +169,7 @@ $('#expense-form').addEventListener('submit', async event => {
     const result = await api(id ? '/api/admin/expenses/' + id : '/api/admin/expenses', {
       method: id ? 'PUT' : 'POST', body: JSON.stringify(payload)
     });
-    if (!id) selectedId = result.items[result.items.length - 1]?.id ?? selectedId;
+    if (!id) { $('#expense-search').value = ''; selectedId = result.items[result.items.length - 1]?.id ?? selectedId; }
     return result;
   }, id ? 'Presupuesto actualizado.' : 'Gasto agregado.');
 });
