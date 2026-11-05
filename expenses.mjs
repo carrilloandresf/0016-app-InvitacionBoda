@@ -132,7 +132,8 @@ export function createExpenses(db) {
           const expense = item(id);
           if (!db.prepare('SELECT id FROM expense_payments WHERE id = ? AND expense_id = ? AND voided_at IS NULL').get(pid, id)) error('No se encontró el pago vigente.', 404);
           if (value > expense.total - paid(id, pid)) error('El valor supera el saldo disponible.');
-          db.prepare('UPDATE expense_payments SET amount = ?, paid_on = ?, note = ? WHERE id = ? AND expense_id = ?').run(value, paidOn, detail, pid, id);
+          db.prepare('UPDATE expense_payments SET voided_at = CURRENT_TIMESTAMP WHERE id = ? AND expense_id = ? AND voided_at IS NULL').run(pid, id);
+          db.prepare('INSERT INTO expense_payments(expense_id, amount, paid_on, note) VALUES(?, ?, ?, ?)').run(id, value, paidOn, detail ? detail + ' (corrige abono #' + pid + ')' : 'Corrección de abono #' + pid);
         });
         respond();
       } else if (req.method === 'DELETE') {
