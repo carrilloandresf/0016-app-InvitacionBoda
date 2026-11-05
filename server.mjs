@@ -4,6 +4,7 @@ import { mkdirSync, readFileSync } from 'node:fs';
 import { dirname, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { DatabaseSync } from 'node:sqlite';
+import { createExpenses } from './expenses.mjs';
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
 const PORT = Number.parseInt(process.env.PORT || '3016', 10);
@@ -105,6 +106,8 @@ if (guestsTableSql && !guestsTableSql.includes("'baby'")) {
   `);
 }
 
+const expenses = createExpenses(db);
+
 // Fin del plazo de confirmación/modificación de asistencia: 11 de octubre de 2026, 23:59 hora de Colombia (UTC-5).
 const RSVP_DEADLINE = Date.UTC(2026, 9, 12, 4, 59, 59);
 const RECEPTION_VISIBILITY_VALUES = new Set(['auto', 'show', 'hide']);
@@ -183,7 +186,12 @@ const ADMIN_FILES = new Map([
   ['/admin', join(ROOT, 'admin/index.html')],
   ['/admin/', join(ROOT, 'admin/index.html')],
   ['/admin/app.js', join(ROOT, 'admin/app.js')],
-  ['/admin/styles.css', join(ROOT, 'admin/styles.css')]
+  ['/admin/styles.css', join(ROOT, 'admin/styles.css')],
+  ['/admin/gastos', join(ROOT, 'admin/gastos.html')],
+  ['/admin/gastos/', join(ROOT, 'admin/gastos.html')],
+  ['/admin/gastos.html', join(ROOT, 'admin/gastos.html')],
+  ['/admin/gastos.js', join(ROOT, 'admin/gastos.js')],
+  ['/admin/gastos.css', join(ROOT, 'admin/gastos.css')]
 ]);
 const INVITATION_TEMPLATE = readFileSync(join(ROOT, 'Invitación Felipe y Sarita.dc.html'), 'utf8');
 
@@ -671,6 +679,8 @@ async function handleApi(req, res, url) {
 
   if (!url.pathname.startsWith('/api/admin/')) return sendJson(res, 404, { error: 'Ruta no encontrada.' });
   if (!requireAdmin(req, res)) return;
+
+  if (await expenses.handle(req, res, url, readJson, sendJson)) return;
 
   if (url.pathname === '/api/admin/invitations' && req.method === 'GET') {
     const invitations = adminInvitations();
