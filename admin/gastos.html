@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Control de gastos · Felipe &amp; Sarita</title>
+  <link rel="icon" href="/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/admin/styles.css">
+  <link rel="stylesheet" href="/admin/gastos.css">
+  <script src="/admin/gastos.js" defer></script>
+</head>
+<body>
+  <header class="topbar finance-topbar">
+    <div>
+      <p class="eyebrow">Felipe &amp; Sarita · 07.11.2026</p>
+      <h1>Control de gastos</h1>
+      <p class="finance-subtitle">Presupuesto, pagos y saldos pendientes de nuestra boda.</p>
+    </div>
+    <div class="control-actions">
+      <a class="button button-ghost" href="/admin">← Volver a administración</a>
+      <a class="button button-ghost" href="/" target="_blank" rel="noopener">Ver invitación</a>
+    </div>
+  </header>
+  <main class="finance-main">
+    <section class="finance-summary" aria-label="Balance general">
+      <article class="finance-stat">
+        <span>Presupuesto total</span>
+        <strong id="total-budget">—</strong>
+        <small>Valor de los conceptos registrados</small>
+      </article>
+      <article class="finance-stat finance-stat-paid">
+        <span>Total abonado</span>
+        <strong id="total-paid">—</strong>
+        <small>Pagos vigentes acumulados</small>
+      </article>
+      <article class="finance-stat finance-stat-pending">
+        <span>Saldo pendiente</span>
+        <strong id="total-pending">—</strong>
+        <small>Valor que queda por pagar</small>
+      </article>
+    </section>
+    <section class="finance-progress-panel" aria-label="Avance de pagos">
+      <div class="finance-progress-title"><div><span class="finance-kicker">Avance general</span><h2>Así vamos con los pagos</h2></div><strong id="total-percent">—</strong></div>
+      <div class="finance-track" role="progressbar" aria-label="Porcentaje pagado" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="total-progress"><span id="total-progress-fill"></span></div>
+      <p id="finance-count" class="finance-helper">Cargando conceptos…</p>
+    </section>
+    <section class="finance-section" aria-label="Gastos">
+      <div class="finance-section-head">
+        <div><p class="finance-kicker">Inventario</p><h2>Conceptos y saldos</h2></div>
+        <div class="finance-tools">
+          <label class="search"><span class="sr-only">Buscar gasto</span><input id="expense-search" type="search" placeholder="Buscar concepto…" autocomplete="off"></label>
+          <button id="export-csv" class="button button-ghost" type="button">Exportar CSV</button>
+          <button id="new-expense" class="button button-primary" type="button">+ Nuevo gasto</button>
+        </div>
+      </div>
+      <div id="finance-loading" class="finance-message">Cargando información financiera…</div>
+      <div id="expense-grid" class="expense-grid" aria-live="polite" hidden></div>
+      <div id="finance-empty" class="finance-message" hidden>No encontramos gastos con ese nombre.</div>
+    </section>
+    <section class="finance-section history-section" id="history-section" aria-label="Historial de abonos" hidden>
+      <div class="finance-section-head">
+        <div><p class="finance-kicker">Movimientos</p><h2 id="history-title">Historial de abonos</h2><p class="finance-helper" id="history-subtitle"></p></div>
+        <button id="history-add" class="button button-primary" type="button">+ Registrar abono</button>
+      </div>
+      <div id="history-list" class="history-list"></div>
+      <p class="finance-helper">Los pagos iniciales no tienen fecha porque no fue proporcionada. Los movimientos anulados permanecen visibles para conservar el historial.</p>
+    </section>
+  </main>
+  <dialog id="expense-dialog" class="finance-dialog">
+    <form id="expense-form">
+      <div class="finance-dialog-head"><div><p class="finance-kicker">Presupuesto</p><h2 id="expense-dialog-title">Nuevo gasto</h2></div><button type="button" class="finance-close" data-close aria-label="Cerrar">×</button></div>
+      <input type="hidden" id="expense-id">
+      <label class="finance-field">Concepto o proveedor<input id="expense-name" maxlength="100" placeholder="Ej. Música, decoración, transporte…" required></label>
+      <label class="finance-field">Presupuesto total (COP)<input id="expense-total" type="number" inputmode="numeric" min="1" max="1000000000000" step="1" placeholder="0" required></label>
+      <p class="finance-helper">El presupuesto es el valor total acordado, no el saldo pendiente. Los pagos se agregan por separado.</p>
+      <p id="expense-form-error" class="finance-error" role="alert" hidden></p>
+      <div class="finance-dialog-actions"><button type="button" class="button button-ghost" data-close>Cancelar</button><button id="expense-submit" class="button button-primary" type="submit">Guardar</button></div>
+    </form>
+  </dialog>
+  <dialog id="payment-dialog" class="finance-dialog">
+    <form id="payment-form">
+      <div class="finance-dialog-head"><div><p class="finance-kicker">Abonos</p><h2 id="payment-dialog-title">Registrar abono</h2></div><button type="button" class="finance-close" data-close aria-label="Cerrar">×</button></div>
+      <p class="finance-helper" id="payment-context"></p>
+      <input type="hidden" id="payment-expense-id">
+      <input type="hidden" id="payment-id">
+      <label class="finance-field">Valor del abono (COP)<input id="payment-amount" type="number" inputmode="numeric" min="1" max="1000000000000" step="1" required></label>
+      <label class="finance-field">Fecha del pago<input id="payment-date" type="date"></label>
+      <label class="finance-field">Nota (opcional)<input id="payment-note" maxlength="250" placeholder="Ej. Transferencia, efectivo, anticipo…"></label>
+      <p id="payment-form-error" class="finance-error" role="alert" hidden></p>
+      <div class="finance-dialog-actions"><button type="button" class="button button-ghost" data-close>Cancelar</button><button id="payment-submit" class="button button-primary" type="submit">Guardar abono</button></div>
+    </form>
+  </dialog>
+  <div id="finance-toast" class="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>
