@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node server.mjs",
-    "check": "node --check server.mjs && node --check admin/app.js"
+    "check": "node --check server.mjs && node --check expenses.mjs && node --check admin/app.js && node --check admin/gastos.js"
   },
   "dependencies": {
     "@babel/standalone": "7.29.0",
