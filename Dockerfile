@@ -12,7 +12,7 @@ ENV NODE_ENV=production \
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --no-audit --no-fund
 
-COPY --chown=node:node ["server.mjs", "support.js", "image-slot.js", "Invitación Felipe y Sarita.dc.html", "./"]
+COPY --chown=node:node ["server.mjs", "expenses.mjs", "support.js", "image-slot.js", "Invitación Felipe y Sarita.dc.html", "./"]
 COPY --chown=node:node _ds ./_ds
 COPY --chown=node:node admin ./admin
 COPY --chown=node:node img ./img
