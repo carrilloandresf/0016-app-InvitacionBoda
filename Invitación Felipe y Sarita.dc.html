@@ -278,6 +278,10 @@
       <div style="display:flex;flex-direction:column;align-items:center;gap:clamp(14px,2.4vh,22px)">
         <p style="font-family:var(--font-heading);font-size:clamp(22px,5.4vw,30px);line-height:1.35;max-width:17ch;margin:0;color:var(--color-neutral-800);text-wrap:pretty">Hay algo que queremos celebrar contigo.</p>
         <button class="btn btn-primary" onClick="{{open}}" style="min-height:52px;padding:0 32px;font-size:15px;letter-spacing:.14em;text-transform:uppercase;border-radius:26px 26px 4px 4px;transition:background 300ms ease,letter-spacing 400ms ease">Abrir invitación</button>
+        <nav aria-label="Cómo llegar a la boda" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;width:min(100%,390px);margin-top:3px">
+          <a href="https://www.google.com/maps/search/?api=1&amp;query=Iglesia+Nuestra+Se%C3%B1ora+del+Rosario+Villa+de+Leyva" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;min-height:52px;padding:9px 8px;border:1px solid var(--color-accent);border-radius:12px;text-decoration:none;text-align:center;font-size:12px;line-height:1.3;color:var(--color-neutral-800);background:var(--color-bg)">Cómo llegar a la ceremonia</a>
+          <a href="https://maps.app.goo.gl/TyGTVq1zDQC6Ue4cA?g_st=ic" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;min-height:52px;padding:9px 8px;border:1px solid var(--color-accent);border-radius:12px;text-decoration:none;text-align:center;font-size:12px;line-height:1.3;color:var(--color-neutral-800);background:var(--color-bg)">Cómo llegar a la recepción</a>
+        </nav>
       </div>
     </div>
 
@@ -308,6 +312,17 @@
         <div style="width:clamp(26px,6vw,52px);height:1px;background:var(--color-divider)"></div>
       </div>
       <div data-reveal="rise" style="font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-neutral-700)">Villa de Leyva</div>
+       <sc-if value="{{isWeddingDay}}" hint-placeholder-val="{{ true }}">
+         <div data-reveal="rise" style="font-size:11px;letter-spacing:.26em;text-transform:uppercase;color:var(--color-accent-700);margin-top:14px">¡Hoy es el día!</div>
+         <p data-reveal="rise" style="font-family:var(--font-heading);font-size:clamp(19px,2.5vw,23px);line-height:1.5;max-width:34ch;margin:0;color:var(--color-neutral-800)">Gracias por acompañarnos en un día que vivirá para siempre en nuestros corazones.</p>
+       </sc-if>
+       <sc-if value="{{isWeddingPast}}" hint-placeholder-val="{{ false }}">
+         <p data-reveal="rise" style="font-family:var(--font-heading);font-size:clamp(18px,2.4vw,22px);line-height:1.5;max-width:34ch;margin:14px 0 0;color:var(--color-neutral-800)">Gracias por haber sido parte de nuestro para siempre.</p>
+       </sc-if>
+       <nav aria-label="Ubicaciones de la boda" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;width:min(100%,560px);margin-top:20px">
+         <a class="btn btn-primary" href="https://www.google.com/maps/search/?api=1&amp;query=Iglesia+Nuestra+Se%C3%B1ora+del+Rosario+Villa+de+Leyva" target="_blank" rel="noopener noreferrer" style="min-height:54px;display:flex;align-items:center;justify-content:center;padding:10px 14px;text-decoration:none;font-size:13px;line-height:1.4;text-align:center;border-radius:22px 22px 4px 4px">Cómo llegar a la ceremonia</a>
+         <a class="btn btn-secondary" href="https://maps.app.goo.gl/TyGTVq1zDQC6Ue4cA?g_st=ic" target="_blank" rel="noopener noreferrer" style="min-height:54px;display:flex;align-items:center;justify-content:center;padding:10px 14px;text-decoration:none;font-size:13px;line-height:1.4;text-align:center;border-radius:22px 22px 4px">Cómo llegar a la recepción</a>
+       </nav>
       <p data-reveal="rise" style="font-family:var(--font-heading);font-size:clamp(20px,2.8vw,26px);line-height:1.45;color:var(--color-neutral-800);max-width:34ch;margin:clamp(18px,3vw,28px) 0 0;text-wrap:pretty">Hay días que no pertenecen solo al tiempo, sino a la eternidad. Con el corazón colmado de amor y esperanza, queremos compartir con ustedes el instante en que nuestras vidas se unirán para siempre.</p>
     </div>
   </section>
@@ -334,27 +349,25 @@
       <div data-reveal="rise" style="font-family:var(--font-heading);font-size:clamp(19px,2.4vw,23px);letter-spacing:.06em">7 de noviembre de 2026</div>
       <div data-reveal="rise" style="font-family:var(--font-heading);font-size:clamp(19px,2.4vw,23px);letter-spacing:.06em;color:var(--color-accent-700);font-feature-settings:'tnum'">2:00 p. m.</div>
       <p data-reveal="rise" style="font-size:14px;color:var(--color-neutral-700);margin:20px 0 24px">Te recomendamos llegar a la 1:30 p. m.</p>
-      <a data-reveal="rise" class="btn btn-primary btn-block" href="https://www.google.com/maps/search/?api=1&amp;query=Iglesia+Nuestra+Se%C3%B1ora+del+Rosario+Villa+de+Leyva" target="_blank" rel="noopener" style="min-height:52px;letter-spacing:.14em;text-transform:uppercase;border-radius:26px 26px 4px 4px;max-width:300px;margin:0 auto;transition:background 300ms ease">Cómo llegar</a>
+      <a data-reveal="rise" class="btn btn-primary btn-block" href="https://www.google.com/maps/search/?api=1&amp;query=Iglesia+Nuestra+Se%C3%B1ora+del+Rosario+Villa+de+Leyva" target="_blank" rel="noopener" style="min-height:52px;letter-spacing:.14em;text-transform:uppercase;border-radius:26px 26px 4px 4px;max-width:300px;margin:0 auto;transition:background 300ms ease">Cómo llegar a la ceremonia</a>
     </div>
   </section>
 
-  <section data-screen-label="Cuenta regresiva" style="padding:clamp(52px,7vw,92px) clamp(24px,5vw,64px);text-align:center">
+  <section data-screen-label="Nuestro para siempre" style="padding:clamp(48px,6vw,82px) clamp(24px,5vw,64px);text-align:center">
     <div style="max-width:560px;margin:0 auto">
-      <div data-reveal="rise" style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:clamp(20px,3vw,32px)">Faltan</div>
-      <div data-reveal="rise" style="display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center">
-        <div>
-          <div style="font-family:var(--font-heading);font-size:clamp(44px,8vw,74px);line-height:1;font-feature-settings:'tnum'">{{days}}</div>
-          <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:10px">días</div>
+      <sc-if value="{{countdownPending}}" hint-placeholder-val="{{ true }}">
+        <div data-reveal="rise" style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:clamp(20px,3vw,32px)">Faltan</div>
+        <div data-reveal="rise" style="display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center">
+          <div><div style="font-family:var(--font-heading);font-size:clamp(44px,8vw,74px);line-height:1;font-feature-settings:'tnum'">{{days}}</div><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:10px">días</div></div>
+          <div style="border-left:1px solid var(--color-divider);border-right:1px solid var(--color-divider)"><div style="font-family:var(--font-heading);font-size:clamp(44px,8vw,74px);line-height:1;font-feature-settings:'tnum'">{{hours}}</div><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:10px">horas</div></div>
+          <div><div style="font-family:var(--font-heading);font-size:clamp(44px,8vw,74px);line-height:1;font-feature-settings:'tnum'">{{minutes}}</div><div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:10px">minutos</div></div>
         </div>
-        <div style="border-left:1px solid var(--color-divider);border-right:1px solid var(--color-divider)">
-          <div style="font-family:var(--font-heading);font-size:clamp(44px,8vw,74px);line-height:1;font-feature-settings:'tnum'">{{hours}}</div>
-          <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:10px">horas</div>
-        </div>
-        <div>
-          <div style="font-family:var(--font-heading);font-size:clamp(44px,8vw,74px);line-height:1;font-feature-settings:'tnum'">{{minutes}}</div>
-          <div style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-neutral-700);margin-top:10px">minutos</div>
-        </div>
-      </div>
+      </sc-if>
+      <sc-if value="{{countdownDone}}" hint-placeholder-val="{{ false }}">
+        <div data-reveal="rise" style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:14px">7 de noviembre de 2026</div>
+        <h2 data-reveal="rise" style="font-family:var(--font-heading);font-size:clamp(30px,4.2vw,44px);font-weight:400;line-height:1.25;margin:0 0 15px">El comienzo de nuestro para siempre</h2>
+        <p data-reveal="rise" style="font-size:clamp(15px,1.8vw,18px);line-height:1.8;color:var(--color-neutral-800);margin:0">Un instante para recordar toda la vida.</p>
+      </sc-if>
     </div>
   </section>
 
@@ -424,253 +437,38 @@
     <p data-reveal="rise" style="font-size:13px;font-style:italic;color:var(--color-neutral-700);text-align:center;margin:26px 0 0">El blanco, marfil y tonos similares están reservados para la novia.</p>
   </section>
 
-  <section id="rsvp" data-screen-label="RSVP" style="padding:clamp(52px,7vw,92px) clamp(24px,5vw,64px)">
-    <div style="max-width:600px;margin:0 auto">
-      <div style="text-align:center;margin-bottom:clamp(26px,4vw,40px)">
-        <div data-reveal="arch" style="display:flex;justify-content:center;margin-bottom:22px">
-          <div style="width:54px;height:70px;border:1px solid var(--color-accent);border-radius:27px 27px 3px 3px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:19px;color:var(--color-accent-700)">F&nbsp;&amp;&nbsp;S</div>
-        </div>
-        <div data-reveal="rise" style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:12px">Confirmación</div>
-        <h2 data-reveal="rise" style="font-size:clamp(30px,4vw,42px);font-weight:400;margin:0 0 6px">{{familyName}}</h2>
-        <p data-reveal="rise" style="font-size:clamp(15px,1.7vw,18px);line-height:1.7;color:var(--color-neutral-800);margin:14px auto 0;max-width:32ch">Nos encantaría saber quiénes podrán acompañarnos.</p>
-      </div>
 
-      <sc-if value="{{loadingInvitation}}" hint-placeholder-val="{{ false }}">
-        <div class="card" style="padding:clamp(24px,3vw,34px);text-align:center;color:var(--color-neutral-700)">
-          Cargando tu invitación…
-        </div>
-      </sc-if>
 
-      <sc-if value="{{showLoadError}}" hint-placeholder-val="{{ false }}">
-        <div class="card" style="padding:clamp(24px,3vw,34px);text-align:center;animation:fsIn 500ms ease both">
-          <div style="font-family:var(--font-heading);font-size:clamp(22px,2.8vw,28px);margin-bottom:10px">No encontramos tu invitación</div>
-          <p style="font-size:14px;line-height:1.7;color:var(--color-neutral-700);margin:0">{{loadError}}</p>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{showForm}}" hint-placeholder-val="{{ true }}">
-        <div style="display:grid;gap:18px">
-          <sc-for list="{{guests}}" as="g" hint-placeholder-count="2">
-            <div data-reveal="rise" data-guest-card="1" class="card" style="padding:clamp(20px,2.4vw,26px)">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px">
-                <div style="font-family:var(--font-heading);font-size:clamp(20px,2.4vw,24px)">{{g.name}}</div>
-                <div style="flex:none;border:1px solid var(--color-divider);border-radius:999px;padding:5px 9px;font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--color-neutral-700)">{{g.typeLabel}}</div>
-              </div>
-              <div style="{{g.vars}}">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                  <button onClick="{{g.yes}}" style="min-height:50px;border-radius:25px 25px 4px 4px;cursor:pointer;font-family:var(--font-heading);font-size:15px;transition:background 320ms ease,border-color 320ms ease,color 320ms ease;background:var(--yes-bg, transparent);color:var(--yes-fg, var(--color-text));border:1px solid var(--yes-bd, var(--color-divider))">Asistiré</button>
-                  <button onClick="{{g.no}}" style="min-height:50px;border-radius:25px 25px 4px 4px;cursor:pointer;font-family:var(--font-heading);font-size:15px;transition:background 320ms ease,border-color 320ms ease,color 320ms ease;background:var(--no-bg, transparent);color:var(--no-fg, var(--color-text));border:1px solid var(--no-bd, var(--color-divider))">No podré asistir</button>
-                </div>
-              </div>
-              <sc-if value="{{g.attending}}" hint-placeholder-val="{{ false }}">
-                <div style="{{g.menuVars}}">
-                  <div style="margin-top:22px;padding-top:20px;border-top:1px solid var(--color-divider);animation:fsIn 650ms cubic-bezier(.22,.7,.25,1) both">
-                    <sc-if value="{{g.babyMode}}" hint-placeholder-val="{{ false }}">
-                      <div style="padding:15px 16px;border-radius:6px;background:var(--color-accent-100);border:1px solid var(--color-accent)">
-                        <div style="font-family:var(--font-heading);font-size:19px;color:var(--color-accent-700)">¡Qué alegría que nos acompañe!</div>
-                        <div style="font-size:13px;line-height:1.6;color:var(--color-neutral-700);margin-top:4px">Para bebés solo confirmamos su asistencia; no se les asigna plato ni bebida.</div>
-                      </div>
-                    </sc-if>
-                    <sc-if value="{{g.menuChoice}}" hint-placeholder-val="{{ true }}">
-                      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:12px">Elige tu menú</div>
-                      <div style="display:grid;gap:10px">
-                        <button onClick="{{g.p1}}" style="text-align:left;padding:15px 16px;border-radius:6px;cursor:pointer;transition:background 320ms ease,border-color 320ms ease;background:var(--p1-bg, transparent);border:1px solid var(--p1-bd, var(--color-divider))">
-                          <div style="font-family:var(--font-heading);font-size:19px;color:var(--p1-fg, var(--color-text))">Murillo Estofado</div>
-                          <div style="font-size:13px;line-height:1.6;color:var(--color-neutral-700);margin-top:4px">Cocción lenta de 12 horas, puré de papas criollas y pastusas, zanahorias baby, puerro salteado, salsa de jugos de cocción, crema de suero.</div>
-                        </button>
-                        <button onClick="{{g.p2}}" style="text-align:left;padding:15px 16px;border-radius:6px;cursor:pointer;transition:background 320ms ease,border-color 320ms ease;background:var(--p2-bg, transparent);border:1px solid var(--p2-bd, var(--color-divider))">
-                          <div style="font-family:var(--font-heading);font-size:19px;color:var(--p2-fg, var(--color-text))">Churrasco de Pollo</div>
-                          <div style="font-size:13px;line-height:1.6;color:var(--color-neutral-700);margin-top:4px">Sofrito en aceite de limonaria, salsa de leche de coco, cilantro fresco, zucchinis baby, champiñones y arroz salteado con semillas de ajonjolí blancas y negras.</div>
-                        </button>
-                      </div>
-                    </sc-if>
-                    <sc-if value="{{g.childMenu}}" hint-placeholder-val="{{ false }}">
-                      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:12px">Menú asignado</div>
-                      <div style="padding:15px 16px;border-radius:6px;background:var(--color-accent-100);border:1px solid var(--color-accent)">
-                        <div style="font-family:var(--font-heading);font-size:19px;color:var(--color-accent-700)">Menú infantil</div>
-                        <div style="font-size:13px;line-height:1.6;color:var(--color-neutral-700);margin-top:4px">Esta opción ya viene completa e incluye su bebida; no requiere selección.</div>
-                      </div>
-                    </sc-if>
-                    <sc-if value="{{g.showDrink}}" hint-placeholder-val="{{ true }}">
-                      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--color-accent-700);margin:20px 0 12px">Bebida</div>
-                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-                        <button onClick="{{g.b1}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b1-bg, transparent);color:var(--b1-fg, var(--color-text));border:1px solid var(--b1-bd, var(--color-divider))">Soda de tamarindo y limonaria</button>
-                        <button onClick="{{g.b2}}" style="min-height:48px;border-radius:6px;cursor:pointer;font-family:var(--font-heading);font-size:15px;padding:8px 10px;transition:background 320ms ease,border-color 320ms ease;background:var(--b2-bg, transparent);color:var(--b2-fg, var(--color-text));border:1px solid var(--b2-bd, var(--color-divider))">Soda de arándanos y moras</button>
-                      </div>
-                    </sc-if>
-                    <sc-if value="{{g.showCake}}" hint-placeholder-val="{{ true }}">
-                      <button onClick="{{g.cake}}" style="width:100%;margin-top:12px;min-height:46px;border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 14px;transition:background 320ms ease,border-color 320ms ease;background:var(--t-bg, transparent);border:1px solid var(--t-bd, var(--color-divider))">
-                        <span style="font-family:var(--font-heading);font-size:16px;color:var(--t-fg, var(--color-text))">Porción de torta</span>
-                        <span style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--t-fg, var(--color-neutral-700))">{{g.cakeLabel}}</span>
-                      </button>
-                    </sc-if>
-                  </div>
-                </div>
-              </sc-if>
-            </div>
-          </sc-for>
-          <sc-if value="{{submitError}}" hint-placeholder-val="{{ false }}">
-            <p style="font-size:13px;line-height:1.6;text-align:center;color:#8b3f38;background:#f4e5e2;border-radius:5px;padding:11px 13px;margin:0">{{submitError}}</p>
-          </sc-if>
-          <button class="btn btn-primary btn-block" onClick="{{send}}" disabled="{{sendDisabled}}" style="min-height:54px;letter-spacing:.14em;text-transform:uppercase;border-radius:27px 27px 4px 4px;transition:background 300ms ease,opacity 300ms ease">{{sendLabel}}</button>
-          <p style="font-size:13px;text-align:center;color:var(--color-neutral-700);margin:0">Confirma antes del 11 de octubre de 2026.</p>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{showRsvpLocked}}" hint-placeholder-val="{{ false }}">
-        <div class="card" style="padding:clamp(24px,3vw,34px);text-align:center;animation:fsIn 500ms ease both">
-          <div style="font-family:var(--font-heading);font-size:clamp(22px,2.8vw,28px);margin-bottom:10px">El plazo de confirmación venció</div>
-          <p style="font-size:14px;line-height:1.7;color:var(--color-neutral-700);margin:0">El 11 de octubre de 2026 se cerró la confirmación de asistencia. Si tienes alguna duda, escríbenos directamente.</p>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
-        <div class="card" style="padding:clamp(28px,3.4vw,38px);text-align:center;animation:fsIn 700ms cubic-bezier(.22,.7,.25,1) both">
-          <div style="font-family:var(--font-heading);font-size:clamp(26px,3vw,32px);margin-bottom:10px">¡Gracias!</div>
-          <p style="font-size:15px;color:var(--color-neutral-800);margin:0 0 18px">Hemos registrado tu respuesta.</p>
-          <div style="display:grid;gap:14px;font-size:14px;color:var(--color-neutral-700);margin-bottom:20px">
-            <sc-for list="{{guests}}" as="g" hint-placeholder-count="2">
-              <div>
-                <div style="font-family:var(--font-heading);font-size:17px;color:var(--color-text)">{{g.name}} · {{g.label}}</div>
-                <div style="font-size:13px;margin-top:2px">{{g.menuLabel}}</div>
-              </div>
-            </sc-for>
-          </div>
-          <sc-if value="{{canEdit}}" hint-placeholder-val="{{ true }}">
-            <button class="btn btn-secondary" onClick="{{edit}}" style="min-height:44px">Modificar mi respuesta</button>
-          </sc-if>
-          <sc-if value="{{editLocked}}" hint-placeholder-val="{{ false }}">
-            <p style="font-size:13px;color:var(--color-neutral-700);margin:0">El plazo para modificar tu respuesta venció el 11 de octubre de 2026.</p>
-          </sc-if>
-        </div>
-      </sc-if>
+  <section id="recepcion" data-screen-label="Recepción" style="padding:clamp(56px,7vw,96px) clamp(24px,5vw,64px);background:var(--color-neutral-900);color:var(--color-neutral-200);text-align:center">
+    <div style="max-width:540px;margin:0 auto">
+      <div data-reveal="rise" style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-300);margin-bottom:16px">Recepción · 4:00 p. m.</div>
+      <h2 data-reveal="rise" style="font-size:clamp(32px,4.4vw,46px);font-weight:400;margin:0 0 18px;color:var(--color-neutral-100)">La celebración continúa</h2>
+      <p data-reveal="rise" style="font-family:var(--font-heading);font-size:clamp(20px,2.8vw,26px);color:var(--color-accent-300);margin:0 0 12px">Hotel de la recepción</p>
+      <p data-reveal="rise" style="font-size:15px;line-height:1.8;color:var(--color-neutral-300);margin:0 auto 26px;max-width:36ch">Después de la ceremonia, nos encontraremos para celebrar juntos. Consulta aquí la ubicación actualizada.</p>
+      <a class="btn btn-block" href="https://maps.app.goo.gl/TyGTVq1zDQC6Ue4cA?g_st=ic" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;min-height:54px;max-width:340px;margin:0 auto;padding:10px 18px;border:1px solid var(--color-accent-400);color:var(--color-accent-300);border-radius:25px 25px 4px 4px;letter-spacing:.07em;text-decoration:none;text-align:center">Cómo llegar a la recepción · Google Maps</a>
     </div>
   </section>
 
-  <section data-screen-label="Hospedaje" style="padding:clamp(52px,7vw,92px) clamp(24px,5vw,64px);background:var(--color-neutral-100);border-top:1px solid var(--color-divider);border-bottom:1px solid var(--color-divider)">
-    <div style="text-align:center;max-width:560px;margin:0 auto">
-      <div data-reveal="rise" style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:14px">Hospedaje</div>
-      <h2 data-reveal="rise" style="font-size:clamp(30px,4.2vw,44px);font-weight:400;margin:0 0 16px;line-height:1.2">¿Te quedas por Villa de Leyva?</h2>
-      <p data-reveal="rise" style="font-size:clamp(15px,1.7vw,18px);line-height:1.8;color:var(--color-neutral-800);margin:0 auto;max-width:36ch">Si vienes desde lejos o simplemente quieres disfrutar un poco más de Villa de Leyva y sus alrededores, tenemos algunas opciones para ti.</p>
-    </div>
-
-    <sc-if value="{{specialLodging}}" hint-placeholder-val="{{ true }}">
-      <div data-reveal="rise" class="card" style="padding:clamp(24px,3vw,34px);margin:clamp(30px,4vw,44px) auto 0;max-width:600px">
-        <div style="font-family:var(--font-heading);font-size:clamp(23px,2.8vw,28px);line-height:1.25;margin-bottom:12px">Alojamiento especial para invitados</div>
-        <p style="font-size:14px;line-height:1.75;color:var(--color-neutral-800);margin:0 0 20px">Para quienes vienen desde Bogotá, otras ciudades o desean pasar la noche, contamos con una opción especial de hospedaje.</p>
-        <div style="display:grid;gap:0;border-top:1px solid var(--color-divider)">
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid var(--color-divider)">
-            <div><div style="font-family:var(--font-heading);font-size:17px">Habitación doble</div><div style="font-size:12px;color:var(--color-neutral-700)">2 personas</div></div>
-            <div style="font-family:var(--font-heading);font-size:16px;white-space:nowrap;font-feature-settings:'tnum'">$210.000</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid var(--color-divider)">
-            <div><div style="font-family:var(--font-heading);font-size:17px">Suite privada con tina</div><div style="font-size:12px;color:var(--color-neutral-700)">2 personas</div></div>
-            <div style="font-family:var(--font-heading);font-size:16px;white-space:nowrap;font-feature-settings:'tnum'">$300.000</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid var(--color-divider)">
-            <div><div style="font-family:var(--font-heading);font-size:17px">Habitación con 2 camas dobles</div><div style="font-size:12px;color:var(--color-neutral-700)">Hasta 4 personas</div></div>
-            <div style="font-family:var(--font-heading);font-size:16px;white-space:nowrap;font-feature-settings:'tnum'">$390.000</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid var(--color-divider)">
-            <div><div style="font-family:var(--font-heading);font-size:17px">Habitación de 3 camas</div><div style="font-size:12px;color:var(--color-neutral-700)">Hasta 4 personas</div></div>
-            <div style="font-family:var(--font-heading);font-size:16px;white-space:nowrap;font-feature-settings:'tnum'">$430.000</div>
-          </div>
-          <div style="display:flex;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid var(--color-divider)">
-            <div><div style="font-family:var(--font-heading);font-size:17px">Habitación de 4 camas</div><div style="font-size:12px;color:var(--color-neutral-700)">Hasta 5 personas</div></div>
-            <div style="font-family:var(--font-heading);font-size:16px;white-space:nowrap;font-feature-settings:'tnum'">$470.000</div>
-          </div>
-        </div>
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-top:18px">
-          <div style="font-family:var(--font-heading);font-size:clamp(20px,2.4vw,24px);color:var(--color-accent-700)">Desayuno incluido</div>
-          <div style="font-size:11px;color:var(--color-neutral-700)">COP / noche</div>
-        </div>
-        <p style="font-size:12px;font-style:italic;color:var(--color-neutral-700);margin:8px 0 20px">Tarifas sujetas a disponibilidad.</p>
-        <button class="btn btn-primary btn-block" onClick="{{lodging}}" style="min-height:52px;letter-spacing:.12em;text-transform:uppercase;border-radius:26px 26px 4px 4px;transition:background 300ms ease">{{lodgingLabel}}</button>
-      </div>
-    </sc-if>
-
-  </section>
-
-  <section data-screen-label="Recepción" style="padding:clamp(56px,7vw,96px) clamp(24px,5vw,64px);background:var(--color-neutral-900);color:var(--color-neutral-200);text-align:center">
-    <sc-if value="{{locked}}" hint-placeholder-val="{{ true }}">
-      <div style="max-width:520px;margin:0 auto">
-        <div data-reveal="arch" style="display:flex;justify-content:center;margin-bottom:26px">
-          <div style="width:74px;height:96px;border:1px solid var(--color-accent-400);border-radius:37px 37px 3px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--color-accent-300)">
-            <div style="font-family:var(--font-heading);font-size:19px">F&nbsp;&amp;&nbsp;S</div>
-            <div style="width:20px;height:14px;border:1px solid var(--color-accent-400);border-radius:2px;position:relative"><div style="position:absolute;left:4px;right:4px;top:-6px;height:7px;border:1px solid var(--color-accent-400);border-bottom:none;border-radius:5px 5px 0 0"></div></div>
-          </div>
-        </div>
-        <h2 data-reveal="rise" style="font-size:clamp(28px,3.8vw,40px);font-weight:400;margin:0 0 16px;color:var(--color-neutral-100)">¿Y después de la ceremonia?</h2>
-        <p data-reveal="rise" style="font-size:clamp(16px,1.8vw,19px);line-height:1.8;margin:0 auto 18px;max-width:32ch;color:var(--color-neutral-300)">Tenemos preparado un lugar especial para continuar celebrando.</p>
-        <div data-reveal="rise" style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--color-accent-300)">La ubicación será revelada después de nuestra ceremonia</div>
-      </div>
-    </sc-if>
-    <sc-if value="{{revealed}}" hint-placeholder-val="{{ false }}">
-      <div style="max-width:520px;margin:0 auto;animation:fsIn 1100ms cubic-bezier(.22,.7,.25,1) both">
-        <div style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-300);margin-bottom:16px">Ya podemos contarte</div>
-        <h2 style="font-size:clamp(32px,4.4vw,46px);font-weight:400;margin:0 0 22px;color:var(--color-neutral-100)">La celebración continúa</h2>
-        <div style="animation:fsSeal 900ms 300ms cubic-bezier(.22,.7,.25,1) both">
-          <div style="font-family:var(--font-heading);font-size:clamp(30px,4vw,42px);color:var(--color-accent-300);margin-bottom:8px">{{receptionName}}</div>
-          <div style="font-size:14px;color:var(--color-neutral-300);margin-bottom:26px">Km 0, vía Sáchica — Villa de Leyva</div>
-        </div>
-        <div style="display:grid;gap:10px;max-width:300px;margin:0 auto">
-          <a class="btn btn-block" href="https://www.google.com/maps/search/?api=1&amp;query=Pietra+Hotel+Km+0+V%C3%ADa+S%C3%A1chica+-+Villa+de+Leyva" target="_blank" rel="noopener" style="min-height:50px;border:1px solid var(--color-accent-400);color:var(--color-accent-300);border-radius:25px 25px 4px 4px;letter-spacing:.12em;text-transform:uppercase">Google Maps</a>
-          <a class="btn btn-block" href="https://www.waze.com/ul?q=Pietra%20Hotel%2C%20Km%200%20V%C3%ADa%20S%C3%A1chica%20-%20Villa%20de%20Leyva&amp;navigate=yes" target="_blank" rel="noopener" style="min-height:50px;border:1px solid color-mix(in srgb, var(--color-neutral-200) 40%, transparent);color:var(--color-neutral-200);border-radius:25px 25px 4px 4px;letter-spacing:.12em;text-transform:uppercase">Waze</a>
-        </div>
-        <p style="font-size:13px;color:var(--color-neutral-400);margin:22px 0 0">El traslado será por cuenta de cada invitado.</p>
-      </div>
-    </sc-if>
-  </section>
-
-  <section data-screen-label="Itinerario" style="padding:clamp(52px,7vw,92px) clamp(24px,5vw,64px)">
+  <section data-screen-label="Itinerario" style="padding:clamp(48px,6vw,82px) clamp(24px,5vw,64px)">
     <div style="max-width:520px;margin:0 auto">
       <div style="text-align:center;margin-bottom:clamp(26px,4vw,38px)">
         <div data-reveal="rise" style="font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--color-accent-700);margin-bottom:12px">Itinerario</div>
-        <h2 data-reveal="rise" style="font-size:clamp(28px,3.8vw,40px);font-weight:400;margin:0">El día</h2>
+        <h2 data-reveal="rise" style="font-size:clamp(28px,3.8vw,40px);font-weight:400;margin:0">Nuestro día</h2>
       </div>
       <div style="display:grid;gap:0;border-left:1px solid var(--color-divider);margin-left:8px;padding-left:22px">
-        <div data-reveal="rise" style="padding:0 0 24px;position:relative">
-          <div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div>
-          <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);font-feature-settings:'tnum'">1:30 p. m.</div>
-          <div style="font-size:14px;color:var(--color-neutral-700)">Llegada de invitados</div>
-        </div>
-        <div data-reveal="rise" style="padding:0 0 24px;position:relative">
-          <div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div>
-          <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);font-feature-settings:'tnum'">2:00 p. m.</div>
-          <div style="font-size:14px;color:var(--color-neutral-700)">Ceremonia</div>
-        </div>
-        <div data-reveal="rise" style="padding:0 0 24px;position:relative">
-          <div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-accent-200)"></div>
-          <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);font-feature-settings:'tnum'">3:00 p. m.</div>
-          <div style="font-size:14px;color:var(--color-neutral-700)">Se revela nuestro próximo destino</div>
-        </div>
-        <div data-reveal="rise" style="padding:0 0 24px;position:relative">
-          <div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div>
-          <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);font-feature-settings:'tnum'">4:00 p. m.</div>
-          <div style="font-size:14px;color:var(--color-neutral-700)">Llegada a la recepción y brindis</div>
-        </div>
-        <div data-reveal="rise" style="padding:0 0 24px;position:relative">
-          <div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div>
-          <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);font-feature-settings:'tnum'">5:00 p. m.</div>
-          <div style="font-size:14px;color:var(--color-neutral-700)">Cena</div>
-        </div>
-        <div data-reveal="rise" style="padding:0 0 24px;position:relative">
-          <div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div>
-          <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);font-feature-settings:'tnum'">6:00 p. m.</div>
-          <div style="font-size:14px;color:var(--color-neutral-700)">Sobremesa de celebración, acompañada de música y brindis hasta el cierre</div>
-        </div>
-        <div data-reveal="rise" style="position:relative">
-          <div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div>
-          <div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px);font-feature-settings:'tnum'">9:00 p. m.</div>
-          <div style="font-size:14px;color:var(--color-neutral-700)">Cierre de la celebración</div>
-        </div>
+        <div data-reveal="rise" style="padding:0 0 24px;position:relative"><div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div><div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px)">1:30 p. m.</div><div style="font-size:14px;color:var(--color-neutral-700)">Llegada a la ceremonia</div></div>
+        <div data-reveal="rise" style="padding:0 0 24px;position:relative"><div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div><div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px)">2:00 p. m.</div><div style="font-size:14px;color:var(--color-neutral-700)">Ceremonia</div></div>
+        <div data-reveal="rise" style="padding:0 0 24px;position:relative"><div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div><div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px)">3:00 p. m.</div><div style="font-size:14px;color:var(--color-neutral-700)">Traslado a la recepción</div></div>
+        <div data-reveal="rise" style="padding:0 0 24px;position:relative"><div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div><div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px)">4:00 p. m.</div><div style="font-size:14px;color:var(--color-neutral-700)">Recepción y brindis</div></div>
+        <div data-reveal="rise" style="padding:0 0 24px;position:relative"><div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div><div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px)">6:30 p. m.</div><div style="font-size:14px;color:var(--color-neutral-700)">Música y celebración</div></div>
+        <div data-reveal="rise" style="position:relative"><div style="position:absolute;left:-26px;top:6px;width:7px;height:7px;border-radius:50%;border:1px solid var(--color-accent);background:var(--color-bg)"></div><div style="font-family:var(--font-heading);font-size:clamp(19px,2.2vw,22px)">9:30 p. m.</div><div style="font-size:14px;color:var(--color-neutral-700)">Fin del espacio musical</div></div>
       </div>
     </div>
   </section>
 
   <section data-screen-label="Cierre" style="padding:clamp(20px,3vw,40px) clamp(24px,5vw,64px) clamp(64px,8vw,100px);text-align:center">
     <div>
-      <h2 data-reveal="rise" style="font-size:clamp(32px,4.4vw,46px);font-weight:400;margin:0 0 18px;line-height:1.2">Nos vemos en<br>Villa de Leyva.</h2>
+      <h2 data-reveal="rise" style="font-size:clamp(32px,4.4vw,46px);font-weight:400;margin:0 0 18px;line-height:1.2">Gracias por ser parte<br>de nuestra historia.</h2>
       <div data-reveal="rise" style="font-family:var(--font-heading);font-style:italic;font-size:clamp(21px,2.6vw,26px);color:var(--color-accent-700)">Felipe &amp; Sarita</div>
       <div data-reveal="rise" style="font-family:var(--font-heading);font-size:15px;letter-spacing:.26em;margin-top:8px;font-feature-settings:'tnum'">07 · 11 · 2026</div>
       <div data-reveal="arch" style="display:flex;align-items:flex-end;justify-content:center;gap:6px;margin:clamp(32px,5vw,48px) 0 0;height:62px">
@@ -731,7 +529,7 @@
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:932},&quot;familyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Familia Roman Rodriguez&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;guestNames&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Flor Esperanza Rodriguez, Rogger Roman Augusto&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;specialLodging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;receptionRevealed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Recepción&quot;},&quot;receptionName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Pietra Hotel&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Recepción&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:932},&quot;familyName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Invitados especiales&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;guestNames&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Flor Esperanza Rodriguez, Rogger Roman Augusto&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;specialLodging&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;},&quot;receptionRevealed&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Recepción&quot;},&quot;receptionName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Hotel de la recepción&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Recepción&quot;}}">
 const CEREMONY = Date.UTC(2026, 10, 7, 19, 0, 0);
 const REVEAL_AT = Date.UTC(2026, 10, 7, 20, 0, 0);
 // Fin del plazo de confirmación/modificación de asistencia: 11 de octubre de 2026, 23:59 hora de Colombia (UTC-5).
@@ -1057,8 +855,14 @@ class Component extends DCLogic {
     const autoRevealed = (this.props.receptionRevealed ?? false) || this.state.now >= REVEAL_AT;
     const revealed = receptionVisibility === 'show' ? true : receptionVisibility === 'hide' ? false : autoRevealed;
     const rsvpLocked = this.state.settings.rsvpLockEnabled && this.state.now > RSVP_DEADLINE;
+    const weddingDayStart = Date.UTC(2026, 10, 7, 5, 0, 0);
+    const weddingDayEnd = Date.UTC(2026, 10, 8, 5, 0, 0);
 
     return {
+      isWeddingDay: this.state.now >= weddingDayStart && this.state.now < weddingDayEnd,
+      isWeddingPast: this.state.now >= weddingDayEnd,
+      countdownPending: diff > 0,
+      countdownDone: diff === 0,
       coverDisplay: st >= 5 ? 'none' : 'block',
       coverOpacity: st >= 3 ? 0 : 1,
       coverLift: st >= 3 ? 'translateY(20px) scale(.96)' : 'none',
@@ -1075,7 +879,7 @@ class Component extends DCLogic {
       pageLeafOpacity: st >= 5 ? .78 : 0,
       sealOpacity: st >= 1 ? 0 : 1,
       open: this.open,
-      familyName: this.state.invitation?.familyName ?? this.props.familyName ?? 'Familia Roman Rodriguez',
+      familyName: this.state.invitation?.familyName ?? this.props.familyName ?? 'Invitados especiales',
       guests,
       loadingInvitation: this.state.loadingInvitation,
       showLoadError: !this.state.loadingInvitation && !!this.state.loadError,
@@ -1106,7 +910,7 @@ class Component extends DCLogic {
       lodgingLabel: this.state.lodgingSent ? 'Solicitud registrada' : this.state.lodgingSaving ? 'Registrando…' : 'Me interesa hospedarme',
       locked: !revealed,
       revealed,
-      receptionName: this.props.receptionName ?? 'Pietra Hotel',
+      receptionName: this.props.receptionName ?? 'Hotel de la recepción',
       dressDisplay: this.state.dress ? 'flex' : 'none',
       dressTitle: this.state.dressCategory === 'men' ? 'Hombres' : 'Mujeres',
       dressNote: this.state.dressCategory === 'men'
